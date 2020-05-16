@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 import 'package:minesweeper/models/game.dart';
 
 void main() {
-  test('Game model', () {
+  test('Game model can calculate cells', () {
     var game = Game(15, [1, 15]);
     expect(game.cells[2][2], 0);
     expect(game.cells[0][1], 10);
