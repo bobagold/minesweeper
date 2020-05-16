@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/game.dart';
 import '../widgets/board.dart';
 
 /// game screen
@@ -14,8 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<List<String>> board =
-      List.generate(15, (i) => List.generate(15, (j) => 'aaa'));
+  final Game board = Game(15, []);
 
   @override
   Widget build(BuildContext context) {

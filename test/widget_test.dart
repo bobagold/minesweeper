@@ -8,6 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minesweeper/main.dart';
+import 'package:minesweeper/models/game.dart';
 
 import 'package:minesweeper/widgets/board.dart';
 
@@ -19,18 +20,20 @@ void main() {
     expect(finderPlay, findsOneWidget);
   });
   testWidgets('Minesweeper board smoke test', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-            body: Board(
-                board: List.generate(
-                    15,
-                    (i) => List.generate(
-                        15, (j) => i == 10 && j == 10 ? 'abc' : 'aaa'))))));
+    var game = Game(15, [10 * 15 + 10]);
+    await tester
+        .pumpWidget(MaterialApp(home: Scaffold(body: Board(board: game))));
     expect(find.byKey(Key('cell0x0')), findsOneWidget);
     expect(find.byKey(Key('cell10x10')), findsOneWidget);
     expect(
         find.ancestor(
-          of: find.byKey(Key('abc')),
+          of: find.byKey(Key('secret0')),
+          matching: find.byKey(Key('cell0x0')),
+        ),
+        findsOneWidget);
+    expect(
+        find.ancestor(
+          of: find.byKey(Key('secret10')),
           matching: find.byKey(Key('cell10x10')),
         ),
         findsOneWidget);

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../models/game.dart';
 
 /// Game board
 class Board extends StatelessWidget {
@@ -8,7 +9,7 @@ class Board extends StatelessWidget {
   final int dimension = 15;
 
   /// game state
-  final List<List<String>> board;
+  final Game board;
 
   /// constructor
   const Board({
@@ -40,5 +41,5 @@ class Board extends StatelessWidget {
   Widget _buildCell(int i, int j) => AspectRatio(
       key: Key('cell${i}x$j'),
       aspectRatio: 1,
-      child: Text('aaa', key: Key(board[i][j])));
+      child: Text('', key: Key('secret${board.cells[i][j]}')));
 }
