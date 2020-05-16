@@ -7,6 +7,15 @@ class Board extends StatelessWidget {
   /// dimension of the board
   final int dimension = 15;
 
+  /// game state
+  final List<List<String>> board;
+
+  /// constructor
+  const Board({
+    Key key,
+    @required this.board,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: _buildLayout);
@@ -29,9 +38,7 @@ class Board extends StatelessWidget {
   }
 
   Widget _buildCell(int i, int j) => AspectRatio(
+      key: Key('cell${i}x$j'),
       aspectRatio: 1,
-      child: Text(
-        'aaa',
-        key: Key('cell${i}x$j'),
-      ));
+      child: Text('aaa', key: Key(board[i][j])));
 }

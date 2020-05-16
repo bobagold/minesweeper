@@ -7,17 +7,32 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:minesweeper/main.dart';
 
+import 'package:minesweeper/widgets/board.dart';
+
 void main() {
-  testWidgets('Minesweeper smoke test', (tester) async {
+  testWidgets('Minesweeper smoke app test', (tester) async {
     await tester.pumpWidget(MyApp());
 
     var finderPlay = find.byIcon(Icons.play_arrow);
     expect(finderPlay, findsOneWidget);
-
+  });
+  testWidgets('Minesweeper board smoke test', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: Board(
+                board: List.generate(
+                    15,
+                    (i) => List.generate(
+                        15, (j) => i == 10 && j == 10 ? 'abc' : 'aaa'))))));
     expect(find.byKey(Key('cell0x0')), findsOneWidget);
     expect(find.byKey(Key('cell10x10')), findsOneWidget);
+    expect(
+        find.ancestor(
+          of: find.byKey(Key('abc')),
+          matching: find.byKey(Key('cell10x10')),
+        ),
+        findsOneWidget);
   });
 }

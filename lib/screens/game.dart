@@ -14,6 +14,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final List<List<String>> board =
+      List.generate(15, (i) => List.generate(15, (j) => 'aaa'));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +39,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Board(),
+                Board(board: board),
               ],
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Board(),
+                Board(board: board),
               ],
             );
 }
