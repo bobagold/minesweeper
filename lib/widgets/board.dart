@@ -47,7 +47,7 @@ class Board extends StatelessWidget {
       key: Key('cell${i}x$j'),
       aspectRatio: 1,
       child: InkWell(
-          onTap: () => onTap(i, j),
+          onTap: onTap != null ? () => onTap(i, j) : null,
           child: Text(_text(i, j), key: Key('secret${board.cells[i][j]}'))));
 
   String _text(int i, int j) =>

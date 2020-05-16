@@ -15,7 +15,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Game board = Game(dimension: 3, bombs: [1, 3]);
+  static final int _dimension = 15;
+  Game board = Game(dimension: _dimension, bombs: [1, 3]);
 
   @override
   Widget build(BuildContext context) {
@@ -51,17 +52,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             );
 
-  _onTap(int i, int j) {
-    setState(() {
-      board = board.move(i, j);
-    });
-  }
+  get _onTap => board.state == GameState.lost
+      ? null
+      : (i, j) {
+          setState(() {
+            board = board.move(i, j);
+          });
+        };
 
   Widget _status() => Text(board.state == GameState.lost ? '💥' : '🤷🏼‍♀️');
 
   void _newGame() {
     setState(() {
-      board = Game(dimension: 3, bombs: [1, 3]);
+      board = Game(dimension: _dimension, bombs: [1, 3]);
     });
   }
 }
