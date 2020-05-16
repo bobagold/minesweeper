@@ -16,5 +16,8 @@ void main() {
 
     var finderPlay = find.byIcon(Icons.play_arrow);
     expect(finderPlay, findsOneWidget);
+
+    expect(find.byKey(Key('cell0x0')), findsOneWidget);
+    expect(find.byKey(Key('cell10x10')), findsOneWidget);
   });
 }

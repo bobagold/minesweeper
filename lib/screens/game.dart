@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/board.dart';
 
 /// game screen
 class MyHomePage extends StatefulWidget {
@@ -20,10 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [],
-        ),
+        child: OrientationBuilder(builder: _orientationBuilder),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: null,
@@ -32,4 +30,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  Widget _orientationBuilder(BuildContext context, Orientation orientation) =>
+      orientation == Orientation.portrait
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Board(),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Board(),
+              ],
+            );
 }
