@@ -1,0 +1,39 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_stages: [commit, push]
+fail_fast: true
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.2.1
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+    -   id: check-json
+    -   id: check-merge-conflict
+-   repo: local
+    hooks:
+    -   id: check-format
+        name: Check format
+        entry: flutter.sh format --set-exit-if-changed
+        language: script
+        files: \.dart$
+    -   id: check-analyze
+        name: Run flutter analyze
+        entry: flutter.sh analyze
+        pass_filenames: false
+        language: script
+        files: \.dart$
+    -   id: check-test
+        name: Run flutter test
+        entry: flutter.sh test
+        pass_filenames: false
+        language: script
+        files: \.dart$
+#    -   id: check-integration-test
+#        name: Run flutter integration test
+#        entry: flutter.sh driver -t lib/instrumented_app.dart --driver test/integration_test.dart
+#        pass_filenames: false
+#        language: script
+#        files: \.dart$
