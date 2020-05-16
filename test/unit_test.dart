@@ -16,5 +16,18 @@ void main() {
     expect(game.cells[1][0], 10);
     expect(game.cells[0][0], 2);
     expect(game.cells[1][1], 2);
+    expect(game.state, GameState.playing);
+  });
+  test('Game model move() can expole bombs', () {
+    var game = Game(3, [1, 3]);
+//    for (var i in game.cells) print(i);
+    expect(game.move(0, 1).state, GameState.lost);
+  });
+  test('Game model move() can open number', () {
+    var game = Game(3, [1, 3]);
+//    for (var i in game.cells) print(i);
+    var move = game.move(0, 0);
+    expect(move.state, GameState.playing);
+    expect(move.openCells, [0]);
   });
 }
