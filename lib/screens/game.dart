@@ -15,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Game board = Game(15, []);
+  Game board = Game(dimension: 3, bombs: [1, 3]);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: OrientationBuilder(builder: _orientationBuilder),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
+        onPressed: _newGame,
         tooltip: 'New game',
         child: Icon(Icons.play_arrow),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -39,13 +39,29 @@ class _MyHomePageState extends State<MyHomePage> {
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Board(board: board),
+                _status(),
+                Board(board: board, onTap: _onTap),
               ],
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Board(board: board),
+                _status(),
+                Board(board: board, onTap: _onTap),
               ],
             );
+
+  _onTap(int i, int j) {
+    setState(() {
+      board = board.move(i, j);
+    });
+  }
+
+  Widget _status() => Text(board.state == GameState.lost ? '💥' : '🤷🏼‍♀️');
+
+  void _newGame() {
+    setState(() {
+      board = Game(dimension: 3, bombs: [1, 3]);
+    });
+  }
 }

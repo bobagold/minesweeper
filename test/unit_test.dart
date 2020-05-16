@@ -10,7 +10,7 @@ import 'package:minesweeper/models/game.dart';
 
 void main() {
   test('Game model can calculate cells', () {
-    var game = Game(15, [1, 15]);
+    var game = Game(dimension: 3, bombs: [1, 3]);
     expect(game.cells[2][2], 0);
     expect(game.cells[0][1], 10);
     expect(game.cells[1][0], 10);
@@ -19,12 +19,14 @@ void main() {
     expect(game.state, GameState.playing);
   });
   test('Game model move() can expole bombs', () {
-    var game = Game(3, [1, 3]);
+    var game = Game(dimension: 3, bombs: [1, 3]);
 //    for (var i in game.cells) print(i);
-    expect(game.move(0, 1).state, GameState.lost);
+    var move = game.move(0, 1);
+    expect(move.state, GameState.lost);
+    expect(move.openCells, [1]);
   });
   test('Game model move() can open number', () {
-    var game = Game(3, [1, 3]);
+    var game = Game(dimension: 3, bombs: [1, 3]);
 //    for (var i in game.cells) print(i);
     var move = game.move(0, 0);
     expect(move.state, GameState.playing);

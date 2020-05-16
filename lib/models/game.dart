@@ -1,7 +1,18 @@
-enum GameState { lost, win, playing }
+/// state of the game process
+enum GameState {
+  /// lost
+  lost,
+
+  /// win
+  win,
+
+  /// still playing
+  playing,
+}
 
 /// game state
 class Game {
+  /// state
   final GameState state;
 
   /// dimension
@@ -10,6 +21,7 @@ class Game {
   /// plain array with coordinates of bombs
   final List<int> bombs;
 
+  /// open cells - plain array
   final List<int> openCells;
 
   List<List<int>> _cells;
@@ -23,9 +35,8 @@ class Game {
   }) : _cells = cells;
 
   /// constructor
-  Game(this.dimension, this.bombs)
-      : state = GameState.playing,
-        openCells = [] {
+  Game({this.dimension, this.bombs, this.openCells = const []})
+      : state = GameState.playing {
     _cells = List.generate(
         dimension,
         (i) =>
@@ -55,15 +66,14 @@ class Game {
     return s;
   }
 
+  /// move (open a cell)
   Game move(int i, int j) {
-    // todo change cells with open/exploded;
     var newState = state;
     var newOpen = List.of(openCells);
     if (_b(i, j) == 1) {
       newState = GameState.lost;
-    } else {
-      newOpen.add(i * dimension + j);
     }
+    newOpen.add(i * dimension + j);
     return Game._(
       dimension: dimension,
       bombs: bombs,

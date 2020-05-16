@@ -20,21 +20,57 @@ void main() {
     expect(finderPlay, findsOneWidget);
   });
   testWidgets('Minesweeper board smoke test', (tester) async {
-    var game = Game(15, [10 * 15 + 10]);
-    await tester
-        .pumpWidget(MaterialApp(home: Scaffold(body: Board(board: game))));
+    var game = Game(dimension: 3, bombs: [1, 3]);
+    onTap(i, j) {}
+    ;
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: Board(
+      board: game,
+      onTap: onTap,
+    ))));
     expect(find.byKey(Key('cell0x0')), findsOneWidget);
-    expect(find.byKey(Key('cell10x10')), findsOneWidget);
+    expect(find.byKey(Key('cell0x1')), findsOneWidget);
     expect(
         find.ancestor(
-          of: find.byKey(Key('secret0')),
+          of: find.byKey(Key('secret2')),
+          matching: find.byKey(Key('cell0x0')),
+        ),
+        findsOneWidget);
+    expect(
+        find.ancestor(
+          of: find.byType(InkWell),
           matching: find.byKey(Key('cell0x0')),
         ),
         findsOneWidget);
     expect(
         find.ancestor(
           of: find.byKey(Key('secret10')),
-          matching: find.byKey(Key('cell10x10')),
+          matching: find.byKey(Key('cell0x1')),
+        ),
+        findsOneWidget);
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: Board(
+      board: game,
+      onTap: onTap,
+    ))));
+    tester.tap(find.byKey(Key('cell0x0')));
+  });
+  testWidgets('Minesweeper board smoke test with opened cell', (tester) async {
+    var game = Game(dimension: 3, bombs: [1, 3], openCells: [0]);
+    onTap(i, j) {}
+    ;
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: Board(
+      board: game,
+      onTap: onTap,
+    ))));
+    expect(
+        find.ancestor(
+          of: find.text('2'),
+          matching: find.byKey(Key('cell0x0')),
         ),
         findsOneWidget);
   });

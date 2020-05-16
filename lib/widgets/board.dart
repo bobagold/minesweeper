@@ -6,16 +6,21 @@ import '../models/game.dart';
 /// Game board
 class Board extends StatelessWidget {
   /// dimension of the board
-  final int dimension = 15;
+  final int dimension;
 
   /// game state
   final Game board;
 
+  /// onTap
+  final Function(int, int) onTap;
+
   /// constructor
-  const Board({
+  Board({
     Key key,
     @required this.board,
-  }) : super(key: key);
+    @required this.onTap,
+  })  : dimension = board.dimension,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,5 +46,14 @@ class Board extends StatelessWidget {
   Widget _buildCell(int i, int j) => AspectRatio(
       key: Key('cell${i}x$j'),
       aspectRatio: 1,
-      child: Text('', key: Key('secret${board.cells[i][j]}')));
+      child: InkWell(
+          onTap: () => onTap(i, j),
+          child: Text(_text(i, j), key: Key('secret${board.cells[i][j]}'))));
+
+  String _text(int i, int j) =>
+      _open(i, j) ? _openText(board.cells[i][j]) : ' ';
+
+  String _openText(int v) => v == 10 ? '💥' : '$v';
+
+  bool _open(int i, int j) => board.openCells.contains(i * dimension + j);
 }
