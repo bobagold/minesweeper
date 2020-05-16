@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// game screen
 class MyHomePage extends StatefulWidget {
+  /// constructor
   MyHomePage({Key key, this.title}) : super(key: key);
 
+  /// title
   final String title;
 
   @override

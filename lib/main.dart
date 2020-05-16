@@ -6,6 +6,7 @@ void main() {
   runApp(MyApp());
 }
 
+/// main entry point
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
