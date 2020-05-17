@@ -63,4 +63,28 @@ void main() {
     expect(move.openCells, []);
     expect(move.markedCells, []);
   });
+  test('Game score counts bombs', () {
+    var game = Game(dimension: 3, bombs: [1, 3]);
+    expect(game.score, 2);
+  });
+  test('Game score counts bombs minus marked bombs', () {
+    var game = Game(dimension: 3, bombs: [1, 3], markedCells: [1]);
+    expect(game.score, 1);
+  });
+  test('Game detects win by marked bombs', () {
+    var game = Game(dimension: 3, bombs: [1, 3]);
+    expect(game.state, GameState.playing);
+    game = game.mark(0, 1);
+    expect(game.state, GameState.playing);
+    game = game.mark(1, 0);
+    expect(game.score, 0);
+    expect(game.state, GameState.win);
+  });
+  test('Game random', () {
+    expect(Game.random(dimension: 15, numOfBombs: 3).length, 3);
+    expect(
+        Game.random(dimension: 15, numOfBombs: 3)
+            .every((element) => element != null),
+        true);
+  });
 }

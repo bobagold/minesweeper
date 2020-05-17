@@ -68,7 +68,7 @@ class Board extends StatelessWidget {
   }) {
     var value = board.cells[i][j];
     var isMarked = _isMarked(i, j);
-    var isOpen = !isMarked && _open(i, j);
+    var isOpen = board.state == GameState.win || !isMarked && _open(i, j);
     var text = Text(
       _text(value: value, isOpen: isOpen, isMarked: isMarked),
       key: Key('secret$value'),

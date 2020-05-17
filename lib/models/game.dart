@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'dart:math';
+
 /// state of the game process
 enum GameState {
   /// lost
@@ -55,6 +57,9 @@ class Game {
 
   /// cells with numbers of bombs or 10 if it is a bomb
   List<List<int>> get cells => _cells;
+
+  /// calculate score
+  int get score => bombs.length - markedCells.length;
 
   int _b(int i, int j) => bombs.contains(i * dimension + j) ? 1 : 0;
 
@@ -138,13 +143,35 @@ class Game {
     } else {
       newMarked.add(i * dimension + j);
     }
+    var newState = state;
+    if (newState == GameState.playing) {
+      var setOfBombs = Set.of(bombs);
+      if (newMarked.intersection(setOfBombs).length ==
+          newMarked.union(setOfBombs).length) {
+        newState = GameState.win;
+      }
+    }
     return Game._(
       dimension: dimension,
       bombs: bombs,
       cells: cells,
-      state: state,
+      state: newState,
       openCells: openCells,
       markedCells: newMarked.toList(),
     );
+  }
+
+  /// randomise bombs
+  static List<int> random({int dimension, int numOfBombs}) {
+    var bombs = <int>{};
+    var random = Random();
+    for (var i = 0; i < numOfBombs; i++) {
+      var value;
+      do {
+        value = random.nextInt(dimension * dimension);
+      } while (bombs.contains(value));
+      bombs.add(value);
+    }
+    return bombs.toList();
   }
 }

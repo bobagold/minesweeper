@@ -11,6 +11,7 @@ import 'package:minesweeper/main.dart';
 import 'package:minesweeper/models/game.dart';
 
 import 'package:minesweeper/widgets/board.dart';
+import 'package:minesweeper/widgets/score.dart';
 
 void main() {
   testWidgets('Minesweeper smoke app test', (tester) async {
@@ -18,6 +19,18 @@ void main() {
 
     var finderPlay = find.byIcon(Icons.play_arrow);
     expect(finderPlay, findsOneWidget);
+    expect(find.byKey(Key('score')), findsOneWidget);
+  });
+  testWidgets('Minesweeper score smoke test', (tester) async {
+    var game = Game(dimension: 3, bombs: [1, 3]);
+    await tester
+        .pumpWidget(MaterialApp(home: Scaffold(body: Score(board: game))));
+    expect(
+        find.ancestor(
+          of: find.text('2'),
+          matching: find.byKey(Key('score')),
+        ),
+        findsOneWidget);
   });
   testWidgets('Minesweeper board smoke test', (tester) async {
     var game = Game(dimension: 3, bombs: [1, 3]);

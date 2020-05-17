@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import '../models/game.dart';
 import '../widgets/board.dart';
+import '../widgets/score.dart';
 
 /// game screen
 class MyHomePage extends StatefulWidget {
@@ -43,30 +42,26 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _orientationBuilder(BuildContext context, Orientation orientation) =>
-      orientation == Orientation.portrait
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _status(),
-                Board(
-                  board: board,
-                  onTap: _onTap,
-                  onLongPress: _onLongPress,
-                ),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _status(),
-                Board(
-                  board: board,
-                  onTap: _onTap,
-                  onLongPress: _onLongPress,
-                ),
-              ],
-            );
+  Widget _orientationBuilder(BuildContext context, Orientation orientation) {
+    var children = [
+      Score(board: board),
+      _status(),
+      Board(
+        board: board,
+        onTap: _onTap,
+        onLongPress: _onLongPress,
+      ),
+    ];
+    return orientation == Orientation.portrait
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          );
+  }
 
   get _onTap => board.state == GameState.lost
       ? null
@@ -76,7 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         };
 
-  Widget _status() => Text(board.state == GameState.lost ? '💥' : '🤷🏼‍♀️');
+  Widget _status() => Text(board.state == GameState.win
+      ? '❤️'
+      : (board.state == GameState.lost ? '💥' : '🤷🏼‍♀️'));
 
   void _newGame() {
     setState(() {
@@ -85,16 +82,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Game _newGameBoard() {
-    var bombs = <int>{};
-    var random = Random();
-    for (var i = 0; i < _dimension * _dimension / 10; i++) {
-      var value;
-      while (bombs.contains(value)) {
-        value = random.nextInt(_dimension * _dimension);
-      }
-      bombs.add(value);
-    }
-    return Game(dimension: _dimension, bombs: bombs.toList());
+    return Game(
+        dimension: _dimension,
+        bombs: Game.random(
+          dimension: _dimension,
+          numOfBombs: (_dimension * _dimension / 5).round(),
+        ));
   }
 
   get _onLongPress => board.state == GameState.lost
