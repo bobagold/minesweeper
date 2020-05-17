@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 /// state of the game process
 enum GameState {
   /// lost
@@ -74,6 +76,13 @@ class Game {
       newState = GameState.lost;
     }
     newOpen.add(i * dimension + j);
+    if (cells[i][j] == 0) {
+      _openAdjustmentCells(
+          Queue.from([
+            [i, j]
+          ]),
+          newOpen);
+    }
     return Game._(
       dimension: dimension,
       bombs: bombs,
@@ -81,5 +90,34 @@ class Game {
       state: newState,
       openCells: newOpen,
     );
+  }
+
+  void _openAdjustmentCells(
+      Queue stackOfZeroAdjustmentCells, List<int> newOpen) {
+    while (stackOfZeroAdjustmentCells.length > 0) {
+      var currentCell = stackOfZeroAdjustmentCells.removeFirst();
+      var i = currentCell[0];
+      var j = currentCell[1];
+      for (var v = -1; v < 2; v++) {
+        for (var h = -1; h < 2; h++) {
+          var ni = i + v;
+          var nj = j + h;
+          if ((v != 0 || h != 0) &&
+              ni >= 0 &&
+              nj >= 0 &&
+              ni < dimension &&
+              nj < dimension) {
+            var adjustmentCell = cells[ni][nj];
+            if (!newOpen.contains(ni * dimension + nj)) {
+              if (adjustmentCell == 0) {
+                print('open=$newOpen; current=$currentCell; ni=$ni; nj=$nj');
+                stackOfZeroAdjustmentCells.addLast([ni, nj]);
+              }
+              newOpen.add(ni * dimension + nj);
+            }
+          }
+        }
+      }
+    }
   }
 }

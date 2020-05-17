@@ -32,4 +32,19 @@ void main() {
     expect(move.state, GameState.playing);
     expect(move.openCells, [0]);
   });
+  test('Game model move() can open 0 and adjustment cells', () {
+    var game = Game(dimension: 3, bombs: [1, 3]);
+//    for (var i in game.cells) print(i);
+    var move = game.move(2, 2);
+    expect(move.state, GameState.playing);
+    expect(move.openCells, [8, 4, 5, 7]);
+  });
+  test('Game model move() can open 0 and adjustment cells', () {
+    var game = Game(dimension: 4, bombs: [1, 3]);
+//    for (var i in game.cells) print(i);
+    var move = game.move(3, 3);
+    expect(move.state, GameState.playing);
+    var expectedOpenCells = [15, 10, 11, 14, 5, 6, 7, 9, 13, 4, 8, 12];
+    expect(move.openCells, expectedOpenCells);
+  });
 }
