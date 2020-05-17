@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../models/game.dart';
 import '../widgets/board.dart';
@@ -16,7 +18,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static final int _dimension = 15;
-  Game board = Game(dimension: _dimension, bombs: [1, 3]);
+  Game board;
+
+  @override
+  void initState() {
+    board = _newGameBoard();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +80,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _newGame() {
     setState(() {
-      board = Game(dimension: _dimension, bombs: [1, 3]);
+      board = _newGameBoard();
     });
+  }
+
+  Game _newGameBoard() {
+    var bombs = <int>{};
+    var random = Random();
+    for (var i = 0; i < _dimension * _dimension / 10; i++) {
+      var value;
+      while (bombs.contains(value)) {
+        value = random.nextInt(_dimension * _dimension);
+      }
+      bombs.add(value);
+    }
+    return Game(dimension: _dimension, bombs: bombs.toList());
   }
 
   get _onLongPress => board.state == GameState.lost
