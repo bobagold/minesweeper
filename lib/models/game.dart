@@ -110,7 +110,7 @@ class Game {
             var adjustmentCell = cells[ni][nj];
             if (!newOpen.contains(ni * dimension + nj)) {
               if (adjustmentCell == 0) {
-                print('open=$newOpen; current=$currentCell; ni=$ni; nj=$nj');
+//                print('open=$newOpen; current=$currentCell; ni=$ni; nj=$nj');
                 stackOfZeroAdjustmentCells.addLast([ni, nj]);
               }
               newOpen.add(ni * dimension + nj);

@@ -48,12 +48,24 @@ class Board extends StatelessWidget {
       aspectRatio: 1,
       child: InkWell(
           onTap: onTap != null ? () => onTap(i, j) : null,
-          child: Text(_text(i, j), key: Key('secret${board.cells[i][j]}'))));
+          child: _buildCellContents(i, j)));
 
-  String _text(int i, int j) =>
-      _open(i, j) ? _openText(board.cells[i][j]) : ' ';
+  Container _buildCellContents(int i, int j) {
+    var value = board.cells[i][j];
+    var isOpen = _open(i, j);
+    return Container(
+      decoration:
+          BoxDecoration(color: isOpen ? Colors.white : Colors.grey[300]),
+      child: Text(
+        _text(value: value, isOpen: isOpen),
+        key: Key('secret$value'),
+      ),
+    );
+  }
 
-  String _openText(int v) => v == 10 ? '💥' : '$v';
+  String _text({int value, bool isOpen}) => isOpen ? _openText(value) : ' ';
+
+  String _openText(int v) => v == 10 ? '💥' : (v == 0 ? '' : '$v');
 
   bool _open(int i, int j) => board.openCells.contains(i * dimension + j);
 }
