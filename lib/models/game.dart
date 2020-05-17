@@ -132,15 +132,19 @@ class Game {
 
   /// mark the field
   Game mark(int i, int j) {
-    var newMarked = List.of(markedCells);
-    newMarked.add(i * dimension + j);
+    var newMarked = Set.of(markedCells);
+    if (newMarked.contains(i * dimension + j)) {
+      newMarked.remove(i * dimension + j);
+    } else {
+      newMarked.add(i * dimension + j);
+    }
     return Game._(
       dimension: dimension,
       bombs: bombs,
       cells: cells,
       state: state,
       openCells: openCells,
-      markedCells: newMarked,
+      markedCells: newMarked.toList(),
     );
   }
 }

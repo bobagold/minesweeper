@@ -55,4 +55,12 @@ void main() {
     expect(move.openCells, []);
     expect(move.markedCells, [8]);
   });
+  test('Game model move() can unmark cell', () {
+    var game = Game(dimension: 3, bombs: [1, 3], markedCells: [8]);
+//    for (var i in game.cells) print(i);
+    var move = game.mark(2, 2);
+    expect(move.state, GameState.playing);
+    expect(move.openCells, []);
+    expect(move.markedCells, []);
+  });
 }

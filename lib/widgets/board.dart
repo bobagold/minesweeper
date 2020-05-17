@@ -81,7 +81,7 @@ class Board extends StatelessWidget {
             child: text,
           )
         : InkWell(
-            onTap: onTap,
+            onTap: isMarked ? null : onTap,
             onLongPress: onLongPress,
             child: text,
           );
