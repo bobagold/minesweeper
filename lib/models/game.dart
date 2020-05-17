@@ -26,6 +26,9 @@ class Game {
   /// open cells - plain array
   final List<int> openCells;
 
+  /// marked cells - plain array
+  final List<int> markedCells;
+
   List<List<int>> _cells;
 
   Game._({
@@ -34,11 +37,16 @@ class Game {
     List<List<int>> cells,
     this.state,
     this.openCells,
+    this.markedCells,
   }) : _cells = cells;
 
   /// constructor
-  Game({this.dimension, this.bombs, this.openCells = const []})
-      : state = GameState.playing {
+  Game({
+    this.dimension,
+    this.bombs,
+    this.openCells = const [],
+    this.markedCells = const [],
+  }) : state = GameState.playing {
     _cells = List.generate(
         dimension,
         (i) =>
@@ -89,6 +97,7 @@ class Game {
       cells: cells,
       state: newState,
       openCells: newOpen,
+      markedCells: markedCells,
     );
   }
 
@@ -119,5 +128,19 @@ class Game {
         }
       }
     }
+  }
+
+  /// mark the field
+  Game mark(int i, int j) {
+    var newMarked = List.of(markedCells);
+    newMarked.add(i * dimension + j);
+    return Game._(
+      dimension: dimension,
+      bombs: bombs,
+      cells: cells,
+      state: state,
+      openCells: openCells,
+      markedCells: newMarked,
+    );
   }
 }

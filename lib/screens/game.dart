@@ -41,14 +41,22 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _status(),
-                Board(board: board, onTap: _onTap),
+                Board(
+                  board: board,
+                  onTap: _onTap,
+                  onLongPress: _onLongPress,
+                ),
               ],
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _status(),
-                Board(board: board, onTap: _onTap),
+                Board(
+                  board: board,
+                  onTap: _onTap,
+                  onLongPress: _onLongPress,
+                ),
               ],
             );
 
@@ -67,4 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
       board = Game(dimension: _dimension, bombs: [1, 3]);
     });
   }
+
+  get _onLongPress => board.state == GameState.lost
+      ? null
+      : (i, j) {
+          setState(() {
+            board = board.mark(i, j);
+          });
+        };
 }

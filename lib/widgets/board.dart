@@ -14,11 +14,15 @@ class Board extends StatelessWidget {
   /// onTap
   final Function(int, int) onTap;
 
+  /// onTap
+  final Function(int, int) onLongPress;
+
   /// constructor
   Board({
     Key key,
     @required this.board,
     @required this.onTap,
+    @required this.onLongPress,
   })  : dimension = board.dimension,
         super(key: key);
 
@@ -47,15 +51,26 @@ class Board extends StatelessWidget {
     return AspectRatio(
       key: Key('cell${i}x$j'),
       aspectRatio: 1,
-      child: _buildCellContents(i, j, onTap != null ? () => onTap(i, j) : null),
+      child: _buildCellContents(
+        i: i,
+        j: j,
+        onTap: onTap != null ? () => onTap(i, j) : null,
+        onLongPress: onLongPress != null ? () => onLongPress(i, j) : null,
+      ),
     );
   }
 
-  Widget _buildCellContents(int i, int j, VoidCallback onTap) {
+  Widget _buildCellContents({
+    int i,
+    int j,
+    VoidCallback onTap,
+    VoidCallback onLongPress,
+  }) {
     var value = board.cells[i][j];
-    var isOpen = _open(i, j);
+    var isMarked = _isMarked(i, j);
+    var isOpen = !isMarked && _open(i, j);
     var text = Text(
-      _text(value: value, isOpen: isOpen),
+      _text(value: value, isOpen: isOpen, isMarked: isMarked),
       key: Key('secret$value'),
     );
     return isOpen
@@ -67,13 +82,17 @@ class Board extends StatelessWidget {
           )
         : InkWell(
             onTap: onTap,
+            onLongPress: onLongPress,
             child: text,
           );
   }
 
-  String _text({int value, bool isOpen}) => isOpen ? _openText(value) : ' ';
+  String _text({int value, bool isOpen, bool isMarked}) =>
+      isMarked ? '🚩' : (isOpen ? _openText(value) : ' ');
 
   String _openText(int v) => v == 10 ? '💥' : (v == 0 ? '' : '$v');
 
   bool _open(int i, int j) => board.openCells.contains(i * dimension + j);
+
+  bool _isMarked(int i, int j) => board.markedCells.contains(i * dimension + j);
 }
