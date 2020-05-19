@@ -181,4 +181,14 @@ class Game {
     }
     return bombs.toList();
   }
+
+  /// should the cell be shown to user
+  bool isOpen(int i, int j) {
+    return state == GameState.win || !isMarked(i, j) && _open(i, j);
+  }
+
+  bool _open(int i, int j) => openCells.contains(i * dimension + j);
+
+  /// should the cell be shown as flagged
+  bool isMarked(int i, int j) => markedCells.contains(i * dimension + j);
 }

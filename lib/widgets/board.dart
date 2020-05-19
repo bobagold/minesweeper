@@ -67,8 +67,8 @@ class Board extends StatelessWidget {
     VoidCallback onLongPress,
   }) {
     var value = board.cells[i][j];
-    var isMarked = _isMarked(i, j);
-    var isOpen = board.state == GameState.win || !isMarked && _open(i, j);
+    var isMarked = board.isMarked(i, j);
+    var isOpen = board.isOpen(i, j);
     var text = Text(
       _text(value: value, isOpen: isOpen, isMarked: isMarked),
       key: Key('secret$value'),
@@ -91,8 +91,4 @@ class Board extends StatelessWidget {
       isMarked ? '🚩' : (isOpen ? _openText(value) : ' ');
 
   String _openText(int v) => v == 10 ? '💥' : (v == 0 ? '' : '$v');
-
-  bool _open(int i, int j) => board.openCells.contains(i * dimension + j);
-
-  bool _isMarked(int i, int j) => board.markedCells.contains(i * dimension + j);
 }
