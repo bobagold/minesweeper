@@ -16,7 +16,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static final int _dimension = 15;
+  int _dimension = 15;
   Game board;
   double difficulty = 1 / 5;
 
@@ -45,12 +45,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _orientationBuilder(BuildContext context, Orientation orientation) {
     var children = [
-      Slider(
-        value: difficulty,
-        onChanged: _changeDifficulty,
-      ),
-      Score(board: board),
-      _status(),
+      Column(children: [
+        Text('board size'),
+        Slider(
+          min: 5,
+          max: 30,
+          value: _dimension.toDouble(),
+          onChanged: _changeDimension,
+        ),
+        Text('difficulty'),
+        Slider(
+          value: difficulty,
+          onChanged: _changeDifficulty,
+        ),
+        Score(board: board),
+        _status(),
+      ]),
       Board(
         board: board,
         onTap: _onTap,
@@ -106,6 +116,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void _changeDifficulty(double value) {
     setState(() {
       difficulty = value;
+      board = _newGameBoard();
+    });
+  }
+
+  void _changeDimension(double value) {
+    setState(() {
+      _dimension = value.floor();
       board = _newGameBoard();
     });
   }

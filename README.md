@@ -4,4 +4,7 @@ Minesweeper game.
 
 ## Todo
 
-* select board size
+* performance
+* screenshots
+* integration tests
+* playstore
