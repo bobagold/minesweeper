@@ -18,6 +18,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static final int _dimension = 15;
   Game board;
+  double difficulty = 1 / 5;
 
   @override
   void initState() {
@@ -44,6 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _orientationBuilder(BuildContext context, Orientation orientation) {
     var children = [
+      Slider(
+        value: difficulty,
+        onChanged: _changeDifficulty,
+      ),
       Score(board: board),
       _status(),
       Board(
@@ -86,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
         dimension: _dimension,
         bombs: Game.random(
           dimension: _dimension,
-          numOfBombs: (_dimension * _dimension / 5).round(),
+          numOfBombs: (_dimension * _dimension * difficulty).round(),
         ));
   }
 
@@ -97,4 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
             board = board.mark(i, j);
           });
         };
+
+  void _changeDifficulty(double value) {
+    setState(() {
+      difficulty = value;
+      board = _newGameBoard();
+    });
+  }
 }
