@@ -184,7 +184,9 @@ class Game {
 
   /// should the cell be shown to user
   bool isOpen(int i, int j) {
-    return state == GameState.win || !isMarked(i, j) && _open(i, j);
+    return state == GameState.win ||
+        !isMarked(i, j) && _open(i, j) ||
+        state == GameState.lost && bombs.contains(i * dimension + j);
   }
 
   bool _open(int i, int j) => openCells.contains(i * dimension + j);

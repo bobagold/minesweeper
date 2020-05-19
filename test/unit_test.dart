@@ -86,6 +86,13 @@ void main() {
     game = game.move(0, 1);
     expect(game.state, GameState.win);
   });
+  test('Game shows all the bombs on loose', () {
+    var game = Game(dimension: 3, bombs: [0, 3]);
+    expect(game.state, GameState.playing);
+    game = game.move(0, 0);
+    expect(game.state, GameState.lost);
+    expect(game.isOpen(0, 3), true);
+  });
   test('Game random', () {
     expect(Game.random(dimension: 15, numOfBombs: 3).length, 3);
     expect(
