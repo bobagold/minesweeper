@@ -96,6 +96,13 @@ class Game {
           ]),
           newOpen);
     }
+    var setOfNewOpen = Set.of(newOpen);
+    var setOfBombs = Set.of(bombs);
+    if (newState == GameState.playing &&
+        setOfNewOpen.intersection(setOfBombs).length == 0 &&
+        setOfNewOpen.union(setOfBombs).length == dimension * dimension) {
+      newState = GameState.win;
+    }
     return Game._(
       dimension: dimension,
       bombs: bombs,

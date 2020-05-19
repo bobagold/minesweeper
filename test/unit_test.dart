@@ -80,6 +80,12 @@ void main() {
     expect(game.score, 0);
     expect(game.state, GameState.win);
   });
+  test('Game detects win by opened non-bombs', () {
+    var game = Game(dimension: 3, bombs: [0, 2, 3, 4, 5, 6, 7, 8]);
+    expect(game.state, GameState.playing);
+    game = game.move(0, 1);
+    expect(game.state, GameState.win);
+  });
   test('Game random', () {
     expect(Game.random(dimension: 15, numOfBombs: 3).length, 3);
     expect(
