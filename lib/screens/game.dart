@@ -31,47 +31,76 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var actions = [
+      _buildRestartButton(context),
+      Center(child: Score(board: board)),
+      Center(child: _status()),
+      PopupMenuButton(
+        itemBuilder: (context) {
+          return [
+            PopupMenuItem(child: Text('board size'), enabled: false),
+            PopupMenuItem(
+              child: _animatedInput(
+                builder: _buildSliderDimension,
+                animation: ValueNotifier(_dimension.toDouble()),
+                onChange: _changeDimension,
+              ),
+            ),
+            PopupMenuItem(child: Text('difficulty'), enabled: false),
+            PopupMenuItem(
+              child: _animatedInput(
+                builder: _buildSliderDifficulty,
+                animation: ValueNotifier(difficulty),
+                onChange: _changeDifficulty,
+              ),
+            ),
+          ];
+        },
+      ),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: _isSquare(context) ? actions : null,
       ),
       body: Center(
         child: OrientationBuilder(builder: _orientationBuilder),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _newGame,
-        tooltip: 'New game',
-        child: Icon(Icons.play_arrow),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  bool _isSquare(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var isSquare = size.longestSide / size.shortestSide < 4 / 3;
+    return isSquare;
+  }
+
+  Widget _buildRestartButton(BuildContext context) {
+    return IconButton(
+      onPressed: _newGame,
+      tooltip: 'New game',
+      icon: Icon(Icons.refresh),
     );
   }
 
   Widget _orientationBuilder(BuildContext context, Orientation orientation) {
-    var dimMin = 5;
-    var dimMax = MediaQuery.of(context).size.shortestSide ~/ minCellSize;
     var children = [
-      Column(children: [
-        Text('board size'),
-        Slider(
-          min: min(dimMin, _dimension).toDouble(),
-          max: max(dimMax, _dimension).toDouble(),
-          divisions: dimMax - dimMin,
-          label: 'board size',
-          value: _dimension.toDouble(),
-          onChanged: _changeDimension,
-        ),
-        Text('difficulty'),
-        Slider(
-          value: difficulty,
-          min: 1 / 25,
-          max: 1 / 5,
-          divisions: 5,
-          label: 'difficulty',
-          onChanged: _changeDifficulty,
-        ),
-        Score(board: board),
-        _status(),
-      ]),
+      if (!_isSquare(context))
+        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('board size'),
+          _buildSliderDimension(
+              context, _dimension.toDouble(), _changeDimension),
+          Text('difficulty'),
+          _buildSliderDifficulty(context, difficulty, _changeDifficulty),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildRestartButton(context),
+              Score(board: board),
+              _status(),
+            ],
+          ),
+        ]),
       Board(
         board: board,
         onTap: _onTap,
@@ -137,4 +166,46 @@ class _MyHomePageState extends State<MyHomePage> {
       board = _newGameBoard();
     });
   }
+
+  Slider _buildSliderDifficulty(
+      BuildContext context, double difficulty, ValueChanged<double> onChange) {
+    return Slider(
+      value: difficulty,
+      min: 1 / 25,
+      max: 1 / 5,
+      divisions: 5,
+      label: 'difficulty',
+      onChanged: onChange,
+    );
+  }
+
+  Slider _buildSliderDimension(
+      BuildContext context, double dimension, ValueChanged<double> onChange) {
+    var dimMin = min(5, dimension);
+    var dimMax =
+        max(MediaQuery.of(context).size.shortestSide ~/ minCellSize, dimension);
+    return Slider(
+      min: dimMin.toDouble(),
+      max: dimMax.toDouble(),
+      divisions: (dimMax - dimMin).toInt(),
+      label: 'board size',
+      value: dimension.toDouble(),
+      onChanged: onChange,
+    );
+  }
+
+  Widget _animatedInput({
+    Widget Function(
+            BuildContext context, double value, ValueChanged<double> onChange)
+        builder,
+    ValueNotifier<double> animation,
+    ValueChanged<double> onChange,
+  }) =>
+      AnimatedBuilder(
+        animation: animation,
+        builder: (context, _) => builder(context, animation.value, (v) {
+          animation.value = v;
+          onChange(v);
+        }),
+      );
 }

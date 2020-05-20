@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import '../models/game.dart';
 
@@ -34,13 +32,11 @@ class Board extends StatelessWidget {
   Widget _buildLayout(BuildContext context, BoxConstraints constraints) {
     return Table(
         border: TableBorder.all(),
-        defaultColumnWidth: FixedColumnWidth(min(
-            60,
-            0.95 *
-                (constraints.maxHeight.isFinite
-                    ? constraints.maxHeight
-                    : constraints.maxWidth) /
-                dimension)),
+        defaultColumnWidth: FixedColumnWidth(0.95 *
+            (constraints.maxHeight.isFinite
+                ? constraints.maxHeight
+                : constraints.maxWidth) /
+            dimension),
         children: List.generate(
             dimension,
             (i) => TableRow(

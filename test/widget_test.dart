@@ -17,7 +17,7 @@ void main() {
   testWidgets('Minesweeper smoke app test', (tester) async {
     await tester.pumpWidget(MyApp());
 
-    var finderPlay = find.byIcon(Icons.play_arrow);
+    var finderPlay = find.byIcon(Icons.refresh);
     expect(finderPlay, findsOneWidget);
     expect(find.byKey(Key('score')), findsOneWidget);
   });
