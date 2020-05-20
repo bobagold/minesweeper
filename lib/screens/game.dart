@@ -19,6 +19,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const minCellSize = 30;
+  static const minDifficulty = 1 / 25;
+  static const maxDifficulty = 1 / 5;
+  static const difficultyNames = [
+    'intern',
+    'juniour',
+    'middle',
+    'seniour',
+    'lead',
+  ];
   int _dimension = 15;
   Game board;
   double difficulty = 1 / 5;
@@ -169,12 +178,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Slider _buildSliderDifficulty(
       BuildContext context, double difficulty, ValueChanged<double> onChange) {
+    var difficultyLevels = difficultyNames.length - 1;
+    var difficultyLevel = (difficultyLevels *
+            (difficulty - minDifficulty) /
+            (maxDifficulty - minDifficulty))
+        .round();
     return Slider(
       value: difficulty,
-      min: 1 / 25,
-      max: 1 / 5,
-      divisions: 5,
-      label: 'difficulty',
+      min: minDifficulty,
+      max: maxDifficulty,
+      divisions: difficultyLevels,
+      label: difficultyNames[difficultyLevel],
       onChanged: onChange,
     );
   }
@@ -188,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
       min: dimMin.toDouble(),
       max: dimMax.toDouble(),
       divisions: (dimMax - dimMin).toInt(),
-      label: 'board size',
+      label: 'size: ${dimension.toInt()}',
       value: dimension.toDouble(),
       onChanged: onChange,
     );
