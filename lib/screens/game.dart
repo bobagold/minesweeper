@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../models/game.dart';
 import '../widgets/board.dart';
@@ -16,6 +18,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const minCellSize = 30;
   int _dimension = 15;
   Game board;
   double difficulty = 1 / 5;
@@ -44,18 +47,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _orientationBuilder(BuildContext context, Orientation orientation) {
+    var dimMin = 5;
+    var dimMax = MediaQuery.of(context).size.shortestSide ~/ minCellSize;
     var children = [
       Column(children: [
         Text('board size'),
         Slider(
-          min: 5,
-          max: 30,
+          min: min(dimMin, _dimension).toDouble(),
+          max: max(dimMax, _dimension).toDouble(),
+          divisions: dimMax - dimMin,
+          label: 'board size',
           value: _dimension.toDouble(),
           onChanged: _changeDimension,
         ),
         Text('difficulty'),
         Slider(
           value: difficulty,
+          min: 1 / 25,
+          max: 1 / 5,
+          divisions: 5,
+          label: 'difficulty',
           onChanged: _changeDifficulty,
         ),
         Score(board: board),
