@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'dart:math';
+
 /// state of the game process
 enum GameState {
   /// lost
@@ -169,8 +171,16 @@ class Game {
 
   /// randomise bombs
   static List<int> random({int dimension, int numOfBombs}) {
-    var list = List.generate(dimension * dimension, (i) => i)..shuffle();
-    return list.sublist(0, numOfBombs);
+    var list = List.generate(dimension * dimension, (i) => i);
+    var random = Random();
+    var ret = <int>[];
+    var length = list.length;
+    for (var i = 0; i < numOfBombs; i++) {
+      var pos = random.nextInt(length - i);
+      ret.add(list[pos]);
+      list[pos] = list[length - i - 1];
+    }
+    return ret;
   }
 
   /// should the cell be shown to user
