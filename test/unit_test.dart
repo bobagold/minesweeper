@@ -85,6 +85,9 @@ void main() {
     expect(game.state, GameState.playing);
     game = game.move(0, 1);
     expect(game.state, GameState.win);
+    expect(game.isOpen(0, 0), false);
+    expect(game.isVisible(0, 0), true);
+    expect(game.score, 0);
   });
   test('Game shows all the bombs on loose', () {
     var game = Game(dimension: 3, bombs: [0, 3]);

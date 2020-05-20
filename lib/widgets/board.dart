@@ -69,8 +69,14 @@ class Board extends StatelessWidget {
     var value = board.cells[i][j];
     var isMarked = board.isMarked(i, j);
     var isOpen = board.isOpen(i, j);
+    var isVisible = board.isVisible(i, j);
     var text = Text(
-      _text(value: value, isOpen: isOpen, isMarked: isMarked),
+      _text(
+        value: value,
+        isOpen: isOpen,
+        isMarked: isMarked,
+        isVisible: isVisible,
+      ),
       key: Key('secret$value'),
     );
     return isOpen
@@ -87,8 +93,8 @@ class Board extends StatelessWidget {
           );
   }
 
-  String _text({int value, bool isOpen, bool isMarked}) =>
-      isMarked ? '🚩' : (isOpen ? _openText(value) : ' ');
+  String _text({int value, bool isOpen, bool isMarked, bool isVisible}) =>
+      isMarked ? '🚩' : (isVisible ? '💣' : (isOpen ? _openText(value) : ' '));
 
   String _openText(int v) => v == 10 ? '💥' : (v == 0 ? '' : '$v');
 }

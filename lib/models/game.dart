@@ -59,7 +59,8 @@ class Game {
   List<List<int>> get cells => _cells;
 
   /// calculate score
-  int get score => bombs.length - markedCells.length;
+  int get score =>
+      state == GameState.win ? 0 : bombs.length - markedCells.length;
 
   int _b(int i, int j) => bombs.contains(i * dimension + j) ? 1 : 0;
 
@@ -184,7 +185,7 @@ class Game {
 
   /// should the cell be shown to user
   bool isOpen(int i, int j) {
-    return state == GameState.win ||
+    return state == GameState.win && !bombs.contains(i * dimension + j) ||
         !isMarked(i, j) && _open(i, j) ||
         state == GameState.lost && bombs.contains(i * dimension + j);
   }
@@ -193,4 +194,8 @@ class Game {
 
   /// should the cell be shown as flagged
   bool isMarked(int i, int j) => markedCells.contains(i * dimension + j);
+
+  /// shows undetonated bomb on win
+  bool isVisible(int i, int j) =>
+      state == GameState.win && bombs.contains(i * dimension + j);
 }

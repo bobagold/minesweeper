@@ -7,4 +7,5 @@ Minesweeper game.
 * performance
 * screenshots
 * integration tests
+* CI/CD using GitHub Actions
 * playstore
