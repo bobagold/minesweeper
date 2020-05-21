@@ -22,7 +22,7 @@ void main() {
     expect(find.byKey(Key('score')), findsOneWidget);
   });
   testWidgets('Minesweeper score smoke test', (tester) async {
-    var game = Game(dimension: 3, bombs: [1, 3]);
+    var game = Game(dimension: 3, bombs: {1, 3});
     await tester
         .pumpWidget(MaterialApp(home: Scaffold(body: Score(board: game))));
     expect(
@@ -33,7 +33,7 @@ void main() {
         findsOneWidget);
   });
   testWidgets('Minesweeper board smoke test', (tester) async {
-    var game = Game(dimension: 3, bombs: [1, 3]);
+    var game = Game(dimension: 3, bombs: {1, 3});
     onTap(i, j) {}
     ;
     await tester.pumpWidget(MaterialApp(
@@ -75,9 +75,9 @@ void main() {
   testWidgets('Minesweeper board smoke test with opened cell', (tester) async {
     var game = Game(
       dimension: 3,
-      bombs: [1, 3],
-      openCells: [0],
-      markedCells: [8],
+      bombs: {1, 3},
+      openCells: {0},
+      markedCells: {8},
     );
     onTap(i, j) {}
     ;

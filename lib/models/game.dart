@@ -23,13 +23,13 @@ class Game {
   final int dimension;
 
   /// plain array with coordinates of bombs
-  final List<int> bombs;
+  final Set<int> bombs;
 
   /// open cells - plain array
-  final List<int> openCells;
+  final Set<int> openCells;
 
   /// marked cells - plain array
-  final List<int> markedCells;
+  final Set<int> markedCells;
 
   List<List<int>> _cells;
 
@@ -46,8 +46,8 @@ class Game {
   Game({
     this.dimension,
     this.bombs,
-    this.openCells = const [],
-    this.markedCells = const [],
+    this.openCells = const {},
+    this.markedCells = const {},
   }) : state = GameState.playing {
     _cells = List.generate(
         dimension,
@@ -85,7 +85,7 @@ class Game {
   /// move (open a cell)
   Game move(int i, int j) {
     var newState = state;
-    var newOpen = List.of(openCells);
+    var newOpen = Set.of(openCells);
     if (_b(i, j) == 1) {
       newState = GameState.lost;
     }
@@ -97,11 +97,9 @@ class Game {
           ]),
           newOpen);
     }
-    var setOfNewOpen = Set.of(newOpen);
     var setOfBombs = Set.of(bombs);
     if (newState == GameState.playing &&
-        setOfNewOpen.intersection(setOfBombs).length == 0 &&
-        setOfNewOpen.union(setOfBombs).length == dimension * dimension) {
+        newOpen.length + setOfBombs.length == dimension * dimension) {
       newState = GameState.win;
     }
     return Game._(
@@ -115,7 +113,7 @@ class Game {
   }
 
   void _openAdjustmentCells(
-      Queue stackOfZeroAdjustmentCells, List<int> newOpen) {
+      Queue stackOfZeroAdjustmentCells, Set<int> newOpen) {
     while (stackOfZeroAdjustmentCells.length > 0) {
       var currentCell = stackOfZeroAdjustmentCells.removeFirst();
       var i = currentCell[0];
@@ -165,15 +163,15 @@ class Game {
       cells: cells,
       state: newState,
       openCells: openCells,
-      markedCells: newMarked.toList(),
+      markedCells: newMarked,
     );
   }
 
   /// randomise bombs
-  static List<int> random({int dimension, int numOfBombs}) {
+  static Set<int> random({int dimension, int numOfBombs}) {
     var list = List.generate(dimension * dimension, (i) => i);
     var random = Random();
-    var ret = <int>[];
+    var ret = <int>{};
     var length = list.length;
     for (var i = 0; i < numOfBombs; i++) {
       var pos = random.nextInt(length - i);
