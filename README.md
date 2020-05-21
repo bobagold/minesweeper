@@ -4,10 +4,17 @@
 
 Minesweeper game.
 
+## Screenshots
+![](screenshots/fail_fast.png)
+![](screenshots/fail_late.png)
+![](screenshots/win_by_open.png)
+
+## Features
+
+* Responsive design - fits portrait, landscape, split-screen, tablet
+* Tests
+
 ## Todo
 
-* performance
-* screenshots
-* integration tests
 * CI/CD using GitHub Actions
 * playstore

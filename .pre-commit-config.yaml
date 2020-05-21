@@ -31,9 +31,9 @@ repos:
         pass_filenames: false
         language: script
         files: \.dart$
-#    -   id: check-integration-test
-#        name: Run flutter integration test
-#        entry: flutter.sh driver -t lib/instrumented_app.dart --driver test/integration_test.dart
-#        pass_filenames: false
-#        language: script
-#        files: \.dart$
+    -   id: check-integration-test
+        name: Run flutter integration test
+        entry: flutter.sh driver -t test_driver/app.dart --driver test_driver/app_test.dart
+        pass_filenames: false
+        language: script
+        files: \.dart$
