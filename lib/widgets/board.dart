@@ -31,6 +31,7 @@ class Board extends StatelessWidget {
 
   Widget _buildLayout(BuildContext context, BoxConstraints constraints) {
     return Table(
+        key: Key('boardTable'),
         border: TableBorder.all(),
         defaultColumnWidth: FixedColumnWidth(0.95 *
             (constraints.maxHeight.isFinite

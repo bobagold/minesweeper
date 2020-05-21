@@ -20,6 +20,17 @@ void main() {
     var finderPlay = find.byIcon(Icons.refresh);
     expect(finderPlay, findsOneWidget);
     expect(find.byKey(Key('score')), findsOneWidget);
+    var initialScore = 45;
+    expect(score(), initialScore);
+    expect(find.byKey(Key('secret0')), findsWidgets);
+    await tester.tap(find.byKey(Key('secret0')).first);
+    expect(score(), initialScore);
+    await tester.longPress(find.byKey(Key('secret10')).first);
+    expect(score(), initialScore - 1);
+    expect(find.byKey(Key('restart')).hitTestable(), findsOneWidget);
+    await tester.tap(find.byKey(Key('restart')));
+    await tester.pump();
+    expect(score(), initialScore);
   });
   testWidgets('Minesweeper score smoke test', (tester) async {
     var game = Game(dimension: 3, bombs: {1, 3});
@@ -101,4 +112,13 @@ void main() {
         ),
         findsOneWidget);
   });
+}
+
+int score() {
+  var score = find
+      .descendant(of: find.byKey(Key('score')), matching: find.byType(Text))
+      .evaluate()
+      .first
+      .widget;
+  return int.tryParse(score is Text ? score.data : '-1');
 }

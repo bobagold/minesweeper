@@ -86,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildRestartButton(BuildContext context) {
     return IconButton(
+      key: Key('restart'),
       onPressed: _newGame,
       tooltip: 'New game',
       icon: Icon(Icons.refresh),
@@ -111,6 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ]),
       Board(
+        key: Key('board'),
         board: board,
         onTap: _onTap,
         onLongPress: _onLongPress,
