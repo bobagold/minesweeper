@@ -1,0 +1,60 @@
+name: Dart CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  # todo extract deploy job
+  # todo add ios deploy
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - name: Restore keystore
+        # -d on linux, -D on macos
+        run: echo $SIGNING_KEY | base64 -D > android/app/key.jks
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk --build-number $GITHUB_RUN_NUMBER
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PATH: key.jks
+      - run: flutter build appbundle --build-number $GITHUB_RUN_NUMBER
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PATH: key.jks
+#      - run: flutter build ios --release --no-codesign
+      - name: Archive production artifacts - apk
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release.apk
+          path: build/app/outputs/apk/release/app-release.apk
+#      - name: Archive production artifacts - ios
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: Runner.app
+#          path: build/ios/iphoneos/Runner.app
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          # todo extract packageName from AndroidManifest.xml
+          packageName: com.actvst.bobagold.minesweeper
+          releaseFile: build/app/outputs/bundle/release/app-release.aab
+          track: internal
