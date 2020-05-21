@@ -6,9 +6,11 @@
 Minesweeper game.
 
 ## Screenshots
-<img src="screenshots/fail_fast.png" width="200">
-<img src="screenshots/fail_late.png" width="200">
-<img src="screenshots/win_by_open.png" width="200">
+<p align="center">
+    <img src="screenshots/fail_fast.png" width="200">
+    <img src="screenshots/fail_late.png" width="200">
+    <img src="screenshots/win_by_open.png" width="200">
+</p>
 
 ## Features
 
@@ -17,5 +19,4 @@ Minesweeper game.
 
 ## Todo
 
-* CI/CD using GitHub Actions
-* playstore
+* Art
