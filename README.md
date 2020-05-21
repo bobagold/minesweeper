@@ -6,9 +6,9 @@
 Minesweeper game.
 
 ## Screenshots
-<img src="screenshots/fail_fast.png" width="30%">
-<img src="screenshots/fail_late.png" width="30%">
-<img src="screenshots/win_by_open.png" width="30%">
+<img src="screenshots/fail_fast.png" width="200">
+<img src="screenshots/fail_late.png" width="200">
+<img src="screenshots/win_by_open.png" width="200">
 
 ## Features
 

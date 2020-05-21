@@ -36,6 +36,12 @@ dev_dependencies:
   effective_dart:
   flutter_driver:
     sdk: flutter
+  flutter_launcher_icons:
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "screenshots/512x512.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
