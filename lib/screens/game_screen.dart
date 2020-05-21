@@ -6,18 +6,18 @@ import '../widgets/board.dart';
 import '../widgets/score.dart';
 
 /// game screen
-class MyHomePage extends StatefulWidget {
+class GameScreen extends StatefulWidget {
   /// constructor
-  MyHomePage({Key key, this.title}) : super(key: key);
+  GameScreen({Key key, this.title}) : super(key: key);
 
   /// title
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _GameScreenState createState() => _GameScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _GameScreenState extends State<GameScreen> {
   static const minCellSize = 30;
   static const minDifficulty = 1 / 25;
   static const maxDifficulty = 1 / 5;
