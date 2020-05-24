@@ -36,7 +36,7 @@ class Board extends StatelessWidget {
   Widget _buildLayout(BuildContext context, BoxConstraints constraints) {
     return Table(
         key: Key('boardTable'),
-        border: TableBorder.all(),
+        border: TableBorder.all(width: 0, color: Colors.grey[600]),
         defaultColumnWidth: FixedColumnWidth(0.95 *
             (constraints.maxHeight.isFinite
                 ? constraints.maxHeight
@@ -90,11 +90,10 @@ class Board extends StatelessWidget {
     }
     var tapKey = '${value < 10 ? 'safe' : 'bomb'}${isMarked ? 'Un' : ''}Tap';
     return isOpen
-        ? Material(
-            child: InkWell(
+        ? InkWell(
             onDoubleTap: onDoubleTap,
             child: text,
-          ))
+          )
         : Material(
             elevation: 100 / dimension,
             color: Colors.grey[300],
