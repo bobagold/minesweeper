@@ -76,6 +76,7 @@ class Board extends StatelessWidget {
       ),
       key: Key('secret$value'),
     );
+    text = Align(child: text);
     // hack for integration test to tap when everything is open
     if (board.state == GameState.win && i == 0 && j == 0) {
       text =
@@ -83,17 +84,16 @@ class Board extends StatelessWidget {
     }
     var tapKey = '${value < 10 ? 'safe' : 'bomb'}${isMarked ? 'Un' : ''}Tap';
     return isOpen
-        ? Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
+        ? text
+        : Material(
+            elevation: 100 / dimension,
+            color: Colors.grey[300],
+            child: InkWell(
+              key: Key(tapKey),
+              onTap: isMarked ? null : onTap,
+              onLongPress: onLongPress,
+              child: text,
             ),
-            child: text,
-          )
-        : InkWell(
-            key: Key(tapKey),
-            onTap: isMarked ? null : onTap,
-            onLongPress: onLongPress,
-            child: text,
           );
   }
 
