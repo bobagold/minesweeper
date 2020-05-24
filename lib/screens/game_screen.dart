@@ -115,6 +115,7 @@ class _GameScreenState extends State<GameScreen> {
         key: Key('board'),
         board: board,
         onTap: _onTap,
+        onDoubleTap: _onDoubleTap,
         onLongPress: _onLongPress,
       ),
     ];
@@ -134,6 +135,14 @@ class _GameScreenState extends State<GameScreen> {
       : (i, j) {
           setState(() {
             board = board.move(i, j);
+          });
+        };
+
+  get _onDoubleTap => board.state == GameState.lost
+      ? null
+      : (i, j) {
+          setState(() {
+            board = board.reveal(i, j);
           });
         };
 

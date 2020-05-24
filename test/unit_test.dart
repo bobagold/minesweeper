@@ -96,6 +96,23 @@ void main() {
     expect(game.state, GameState.lost);
     expect(game.isOpen(0, 3), true);
   });
+  test('Cannot reveal neighbours if not open', () {
+    var game = Game(dimension: 3, bombs: {0, 8});
+    expect(game.state, GameState.playing);
+    expect(game.reveal(0, 1), game);
+  });
+  test('Cannot reveal neighbours if number != marked neighbours', () {
+    var game = Game(dimension: 3, bombs: {0, 8}, openCells: {1});
+    expect(game.state, GameState.playing);
+    expect(game.reveal(0, 1), game);
+  });
+  test('Can reveal neighbours if number == marked neighbours', () {
+    var game =
+        Game(dimension: 3, bombs: {0, 8}, markedCells: {0}, openCells: {1});
+    expect(game.state, GameState.playing);
+    game = game.reveal(0, 1);
+    expect(game.openCells, {1, 2, 3, 4, 5});
+  });
   test('Game random', () {
     expect(Game.random(dimension: 15, numOfBombs: 3).length, 3);
     expect(

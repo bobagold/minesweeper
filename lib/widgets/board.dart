@@ -13,6 +13,9 @@ class Board extends StatelessWidget {
   final Function(int, int) onTap;
 
   /// onTap
+  final Function(int, int) onDoubleTap;
+
+  /// onTap
   final Function(int, int) onLongPress;
 
   /// constructor
@@ -20,6 +23,7 @@ class Board extends StatelessWidget {
     Key key,
     @required this.board,
     @required this.onTap,
+    @required this.onDoubleTap,
     @required this.onLongPress,
   })  : dimension = board.dimension,
         super(key: key);
@@ -52,6 +56,7 @@ class Board extends StatelessWidget {
         i: i,
         j: j,
         onTap: onTap != null ? () => onTap(i, j) : null,
+        onDoubleTap: onDoubleTap != null ? () => onDoubleTap(i, j) : null,
         onLongPress: onLongPress != null ? () => onLongPress(i, j) : null,
       ),
     );
@@ -61,6 +66,7 @@ class Board extends StatelessWidget {
     int i,
     int j,
     VoidCallback onTap,
+    VoidCallback onDoubleTap,
     VoidCallback onLongPress,
   }) {
     var value = board.cells[i][j];
@@ -84,7 +90,11 @@ class Board extends StatelessWidget {
     }
     var tapKey = '${value < 10 ? 'safe' : 'bomb'}${isMarked ? 'Un' : ''}Tap';
     return isOpen
-        ? text
+        ? Material(
+            child: InkWell(
+            onDoubleTap: onDoubleTap,
+            child: text,
+          ))
         : Material(
             elevation: 100 / dimension,
             color: Colors.grey[300],

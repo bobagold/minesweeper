@@ -57,6 +57,7 @@ void main() {
         board: game,
         onTap: onTap,
         onLongPress: onTap,
+        onDoubleTap: onTap,
       ))));
       expect(find.byKey(Key('cell0x0')), findsOneWidget);
       expect(find.byKey(Key('cell0x1')), findsOneWidget);
@@ -94,6 +95,7 @@ void main() {
         board: game,
         onTap: onTap,
         onLongPress: onTap,
+        onDoubleTap: onTap,
       ))));
       expect(
           find.ancestor(
