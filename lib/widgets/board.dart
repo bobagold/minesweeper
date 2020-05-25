@@ -96,7 +96,7 @@ class Board extends StatelessWidget {
           )
         : Material(
             elevation: 100 / dimension,
-            color: Colors.grey[300],
+            color: Colors.lightBlue[200],
             child: InkWell(
               key: Key(tapKey),
               onTap: isMarked ? null : onTap,
