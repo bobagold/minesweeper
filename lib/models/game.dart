@@ -51,8 +51,8 @@ class Game {
   }) : state = GameState.playing {
     _cells = List.generate(
         dimension,
-        (i) =>
-            List.generate(dimension, (j) => (_b(i, j) == 1 ? 10 : _cnt(i, j))));
+        (i) => List.generate(
+            dimension, (j) => (_isBomb(i, j) ? 10 : _cntBombs(i, j))));
   }
 
   /// cells with numbers of bombs or 10 if it is a bomb
@@ -62,9 +62,13 @@ class Game {
   int get score =>
       state == GameState.win ? 0 : bombs.length - markedCells.length;
 
-  int _b(int i, int j) => bombs.contains(i * dimension + j) ? 1 : 0;
+  bool _isBomb(int i, int j) => bombs.contains(i * dimension + j);
 
-  int _cnt(int i, int j) {
+  int _cntBombs(int i, int j) => _cnt(i, j, (i, j) => _isBomb(i, j) ? 1 : 0);
+
+  int _cntMarked(int i, int j) => _cnt(i, j, (i, j) => isMarked(i, j) ? 1 : 0);
+
+  int _cnt(int i, int j, int Function(int, int) f) {
     var s = 0;
     for (var v = -1; v < 2; v++) {
       for (var h = -1; h < 2; h++) {
@@ -75,7 +79,7 @@ class Game {
             nj >= 0 &&
             ni < dimension &&
             nj < dimension) {
-          s += _b(ni, nj);
+          s += f(ni, nj);
         }
       }
     }
@@ -86,7 +90,7 @@ class Game {
   Game move(int i, int j) {
     var newState = state;
     var newOpen = Set.of(openCells);
-    if (_b(i, j) == 1) {
+    if (_isBomb(i, j)) {
       newState = GameState.lost;
     }
     newOpen.add(i * dimension + j);
@@ -196,4 +200,22 @@ class Game {
   /// shows undetonated bomb on win
   bool isVisible(int i, int j) =>
       state == GameState.win && bombs.contains(i * dimension + j);
+
+  /// reveal neighbours of an open cell
+  Game reveal(int i, int j) {
+    if (!_open(i, j)) {
+      return this;
+    }
+    if (_cntMarked(i, j) != _cntBombs(i, j)) {
+      return this;
+    }
+    var game = this;
+    _cnt(i, j, (i, j) {
+      if (!_open(i, j) && !isMarked(i, j)) {
+        game = game.move(i, j);
+      }
+      return 1;
+    });
+    return game;
+  }
 }

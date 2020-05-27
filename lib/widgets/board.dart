@@ -13,6 +13,9 @@ class Board extends StatelessWidget {
   final Function(int, int) onTap;
 
   /// onTap
+  final Function(int, int) onDoubleTap;
+
+  /// onTap
   final Function(int, int) onLongPress;
 
   /// constructor
@@ -20,6 +23,7 @@ class Board extends StatelessWidget {
     Key key,
     @required this.board,
     @required this.onTap,
+    @required this.onDoubleTap,
     @required this.onLongPress,
   })  : dimension = board.dimension,
         super(key: key);
@@ -32,7 +36,7 @@ class Board extends StatelessWidget {
   Widget _buildLayout(BuildContext context, BoxConstraints constraints) {
     return Table(
         key: Key('boardTable'),
-        border: TableBorder.all(),
+        border: TableBorder.all(width: 0, color: Colors.grey[600]),
         defaultColumnWidth: FixedColumnWidth(0.95 *
             (constraints.maxHeight.isFinite
                 ? constraints.maxHeight
@@ -52,6 +56,7 @@ class Board extends StatelessWidget {
         i: i,
         j: j,
         onTap: onTap != null ? () => onTap(i, j) : null,
+        onDoubleTap: onDoubleTap != null ? () => onDoubleTap(i, j) : null,
         onLongPress: onLongPress != null ? () => onLongPress(i, j) : null,
       ),
     );
@@ -61,6 +66,7 @@ class Board extends StatelessWidget {
     int i,
     int j,
     VoidCallback onTap,
+    VoidCallback onDoubleTap,
     VoidCallback onLongPress,
   }) {
     var value = board.cells[i][j];
@@ -76,6 +82,7 @@ class Board extends StatelessWidget {
       ),
       key: Key('secret$value'),
     );
+    text = Align(child: text);
     // hack for integration test to tap when everything is open
     if (board.state == GameState.win && i == 0 && j == 0) {
       text =
@@ -83,17 +90,19 @@ class Board extends StatelessWidget {
     }
     var tapKey = '${value < 10 ? 'safe' : 'bomb'}${isMarked ? 'Un' : ''}Tap';
     return isOpen
-        ? Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-            ),
+        ? InkWell(
+            onDoubleTap: onDoubleTap,
             child: text,
           )
-        : InkWell(
-            key: Key(tapKey),
-            onTap: isMarked ? null : onTap,
-            onLongPress: onLongPress,
-            child: text,
+        : Material(
+            elevation: 100 / dimension,
+            color: Colors.lightBlue[200],
+            child: InkWell(
+              key: Key(tapKey),
+              onTap: isMarked ? null : onTap,
+              onLongPress: onLongPress,
+              child: text,
+            ),
           );
   }
 

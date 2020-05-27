@@ -20,3 +20,7 @@ Minesweeper game.
 ## Todo
 
 * Art
+* Save settings
+* Performance #2
+* Cell widget
+* State management
