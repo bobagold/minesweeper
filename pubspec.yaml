@@ -37,11 +37,38 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   flutter_launcher_icons:
+  flutter_flavorizr:
 
 flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "screenshots/512x512.png"
+
+flavorizr:
+  app:
+    android:
+      flavorDimensions: "flavor-type"
+    ios:
+
+  flavors:
+    dev:
+      app:
+        name: "Minesweeper (dev)"
+
+      android:
+        applicationId: "com.actvst.dev.minesweeper"
+
+      ios:
+        bundleId: "com.actvst.dev.minesweeper"
+
+    prod:
+      app:
+        name: "Minesweeper"
+
+      android:
+        applicationId: "com.actvst.bobagold.minesweeper"
+      ios:
+        bundleId: "com.actvst.bobagold.minesweeper"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

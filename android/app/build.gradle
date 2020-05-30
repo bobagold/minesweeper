@@ -37,6 +37,22 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+
+    flavorDimensions "flavor-type"
+
+    productFlavors {
+        dev {
+            dimension "flavor-type"
+            applicationId "com.actvst.dev.minesweeper"
+            resValue "string", "app_name", "Minesweeper (dev)"
+        }
+        prod {
+            dimension "flavor-type"
+            applicationId "com.actvst.bobagold.minesweeper"
+            resValue "string", "app_name", "Minesweeper"
+        }
+    }
+
     compileSdkVersion 28
 
     sourceSets {

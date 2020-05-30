@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:minesweeper/flavors.dart';
 import 'package:minesweeper/main.dart';
 import 'package:minesweeper/models/game.dart';
 import 'package:minesweeper/widgets/board.dart';
@@ -15,7 +16,7 @@ import 'package:minesweeper/widgets/score.dart';
 void main() {
   group('Minesweeper smoke app test', () {
     testWidgets('MyApp with score and board', (tester) async {
-      await tester.pumpWidget(MyApp());
+      await tester.pumpWidget(MyApp(flavor: Flavor.dev));
 
       var finderPlay = find.byIcon(Icons.refresh);
       expect(finderPlay, findsOneWidget);
