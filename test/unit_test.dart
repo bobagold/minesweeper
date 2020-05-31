@@ -120,4 +120,29 @@ void main() {
             .every((element) => element != null),
         true);
   });
+  test('saveToString works', () {
+    var game =
+        Game(dimension: 3, bombs: {0, 8}, markedCells: {0}, openCells: {1});
+    expect(game.saveToString(), '3,3|0,8|1|0');
+  });
+  group('loadFromString', () {
+    test('extracts dimension', () {
+      expect(Game.loadFromString('3,3|||').dimension, 3);
+    });
+    test('extracts bombs', () {
+      expect(Game.loadFromString('3,3|0,8||').bombs, {0, 8});
+    });
+    test('extracts openCells', () {
+      expect(Game.loadFromString('3,3|0,8|1|').openCells, {1});
+    });
+    test('extracts markedCells', () {
+      expect(Game.loadFromString('3,3|||0').markedCells, {0});
+    });
+    test('detects state by moves', () {
+      expect(Game.loadFromString('3,3|0,8|1,0|').state, GameState.lost);
+    });
+    test('detects state by marked', () {
+      expect(Game.loadFromString('3,3|0,8||0,8').state, GameState.win);
+    });
+  });
 }
