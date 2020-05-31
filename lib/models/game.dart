@@ -218,4 +218,36 @@ class Game {
     });
     return game;
   }
+
+  /// load from string
+  static Game loadFromString(String board) {
+    var parsed = board
+        .split('|')
+        .map((part) =>
+            part.split(',').where((s) => s.isNotEmpty).map(int.parse).toSet())
+        .toList();
+    var marked = parsed.removeLast();
+    var open = parsed.removeLast();
+    var bombs = parsed.removeLast();
+    var dimension = parsed.removeLast().first;
+    var game = Game(
+      dimension: dimension,
+      bombs: bombs,
+    );
+    for (var move in open) {
+      game = game.move(move ~/ dimension, move % dimension);
+    }
+    for (var mark in marked) {
+      game = game.mark(mark ~/ dimension, mark % dimension);
+    }
+    return game;
+  }
+
+  /// save to string
+  String saveToString() => [
+        [dimension, dimension],
+        bombs,
+        openCells,
+        markedCells
+      ].map((l) => l.join(',')).join('|');
 }

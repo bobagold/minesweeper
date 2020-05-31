@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/game.dart';
 import '../widgets/board.dart';
 import '../widgets/score.dart';
@@ -35,7 +36,28 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     board = _newGameBoard();
+    _loadStateFromSettings();
     super.initState();
+  }
+
+  void _loadStateFromSettings() async {
+    try {
+      var p = await SharedPreferences.getInstance();
+      var board = p.getString('board');
+      if (board != null) {
+        this.board = Game.loadFromString(board);
+        _dimension = this.board.dimension;
+        difficulty = this.board.bombs.length / (_dimension * _dimension);
+        setState(() {});
+      }
+    } finally {
+      ; // do nothing
+    }
+  }
+
+  void _saveStateToSettings() async {
+    var p = await SharedPreferences.getInstance();
+    p.setString('board', board.saveToString());
   }
 
   @override
@@ -135,6 +157,7 @@ class _GameScreenState extends State<GameScreen> {
       : (i, j) {
           setState(() {
             board = board.move(i, j);
+            _saveStateToSettings();
           });
         };
 
@@ -143,6 +166,7 @@ class _GameScreenState extends State<GameScreen> {
       : (i, j) {
           setState(() {
             board = board.reveal(i, j);
+            _saveStateToSettings();
           });
         };
 
@@ -153,6 +177,7 @@ class _GameScreenState extends State<GameScreen> {
   void _newGame() {
     setState(() {
       board = _newGameBoard();
+      _saveStateToSettings();
     });
   }
 
@@ -170,6 +195,7 @@ class _GameScreenState extends State<GameScreen> {
       : (i, j) {
           setState(() {
             board = board.mark(i, j);
+            _saveStateToSettings();
           });
         };
 
@@ -177,6 +203,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       difficulty = value;
       board = _newGameBoard();
+      _saveStateToSettings();
     });
   }
 
@@ -184,6 +211,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _dimension = value.floor();
       board = _newGameBoard();
+      _saveStateToSettings();
     });
   }
 
