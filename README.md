@@ -16,6 +16,9 @@ Minesweeper game.
 
 * Responsive design - fits portrait, landscape, split-screen, tablet
 * Tests
+* Rive animations:
+    * https://rive.app/a/bobagold/files/flare/winner-minesweeper/preview
+    * https://rive.app/a/bobagold/files/flare/entrellas-minesweeper/preview
 
 ## Todo
 
