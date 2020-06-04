@@ -37,7 +37,7 @@ class Board extends StatelessWidget {
     return Table(
         key: Key('boardTable'),
         border: TableBorder.all(width: 0, color: Colors.grey[600]),
-        defaultColumnWidth: FixedColumnWidth(0.95 *
+        defaultColumnWidth: FixedColumnWidth(1 *
             (constraints.maxHeight.isFinite
                 ? constraints.maxHeight
                 : constraints.maxWidth) /
@@ -83,11 +83,6 @@ class Board extends StatelessWidget {
       key: Key('secret$value'),
     );
     text = Align(child: text);
-    // hack for integration test to tap when everything is open
-    if (board.state == GameState.win && i == 0 && j == 0) {
-      text =
-          Stack(children: [text, InkWell(key: Key('safeTap'), onTap: () {})]);
-    }
     var tapKey = '${value < 10 ? 'safe' : 'bomb'}${isMarked ? 'Un' : ''}Tap';
     return isOpen
         ? InkWell(

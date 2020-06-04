@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/game.dart';
 import '../widgets/board.dart';
+import '../widgets/board_animations.dart';
 import '../widgets/score.dart';
 
 /// game screen
@@ -116,6 +117,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Widget _orientationBuilder(BuildContext context, Orientation orientation) {
+    var side = MediaQuery.of(context).size.shortestSide * 0.95;
     var children = [
       if (!_isSquare(context))
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -133,12 +135,20 @@ class _GameScreenState extends State<GameScreen> {
             ],
           ),
         ]),
-      Board(
-        key: Key('board'),
-        board: board,
-        onTap: _onTap,
-        onDoubleTap: _onDoubleTap,
-        onLongPress: _onLongPress,
+      Container(
+        height: side,
+        width: side,
+        child: BoardAnimations(
+          state: board.state,
+          onDismiss: _newGame,
+          child: Board(
+            key: Key('board'),
+            board: board,
+            onTap: _onTap,
+            onDoubleTap: _onDoubleTap,
+            onLongPress: _onLongPress,
+          ),
+        ),
       ),
     ];
     return orientation == Orientation.portrait
