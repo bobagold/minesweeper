@@ -1,5 +1,6 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 ![Dart CI](https://github.com/bobagold/minesweeper/workflows/Dart%20CI/badge.svg)
+[![play-store](https://img.shields.io/badge/playstore-published-brightgreen)](https://play.google.com/store/apps/details?id=com.actvst.bobagold.minesweeper)
 
 # minesweeper
 

@@ -34,24 +34,27 @@ class Board extends StatelessWidget {
   }
 
   Widget _buildLayout(BuildContext context, BoxConstraints constraints) {
+    var width = 1 *
+        (constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : constraints.maxWidth) /
+        dimension;
     return Table(
         key: Key('boardTable'),
         border: TableBorder.all(width: 0, color: Colors.grey[600]),
-        defaultColumnWidth: FixedColumnWidth(1 *
-            (constraints.maxHeight.isFinite
-                ? constraints.maxHeight
-                : constraints.maxWidth) /
-            dimension),
+        defaultColumnWidth: FixedColumnWidth(width),
         children: List.generate(
             dimension,
             (i) => TableRow(
-                children: List.generate(dimension, (j) => _buildCell(i, j)))));
+                children:
+                    List.generate(dimension, (j) => _buildCell(i, j, width)))));
   }
 
-  Widget _buildCell(int i, int j) {
-    return AspectRatio(
+  Widget _buildCell(int i, int j, double width) {
+    return SizedBox(
       key: Key('cell${i}x$j'),
-      aspectRatio: 1,
+      width: width,
+      height: width,
       child: _buildCellContents(
         i: i,
         j: j,
