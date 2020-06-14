@@ -219,6 +219,9 @@ class Game {
     return game;
   }
 
+  /// difficulty
+  double get difficulty => bombs.length / (dimension * dimension);
+
   /// load from string
   static Game loadFromString(String board) {
     var parsed = board

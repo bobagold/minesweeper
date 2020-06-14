@@ -25,8 +25,10 @@ void main() {
       expect(find.byKey(Key('secret0')), findsWidgets);
       await tester.tap(find.byKey(Key('secret0')).first);
       expect(score(), initialScore);
-      await tester.longPress(find.byKey(Key('secret10')).first);
+      await tester.longPress(find.byKey(Key('bombTap')).first);
       expect(score(), initialScore - 1);
+      await tester.longPress(find.byKey(Key('bombTap')).first);
+      expect(score(), initialScore - 2);
       expect(find.byKey(Key('restart')).hitTestable(), findsOneWidget);
       await tester.tap(find.byKey(Key('restart')));
       await tester.pump();
@@ -34,10 +36,9 @@ void main() {
     });
   });
   group('Score', () {
-    testWidgets('equals to count of bombs', (tester) async {
-      var game = Game(dimension: 3, bombs: {1, 3});
+    testWidgets('score shows score', (tester) async {
       await tester
-          .pumpWidget(MaterialApp(home: Scaffold(body: Score(board: game))));
+          .pumpWidget(MaterialApp(home: Scaffold(body: Score(score: 2))));
       expect(
           find.ancestor(
             of: find.text('2'),

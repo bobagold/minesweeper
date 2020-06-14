@@ -74,7 +74,7 @@ class BoardAnimations extends StatelessWidget {
           onDismiss: onDismiss,
         ),
       // hack for integration test to tap when everything is open
-      GestureDetector(
+      InkWell(
           key: Key('safeTap'),
           onTap: () {},
           child: SizedBox(

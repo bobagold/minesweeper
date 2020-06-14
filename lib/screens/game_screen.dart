@@ -1,25 +1,25 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/game.dart';
+import '../models/game_bloc.dart';
+import '../models/tuple.dart';
 import '../widgets/board.dart';
 import '../widgets/board_animations.dart';
 import '../widgets/score.dart';
 
 /// game screen
-class GameScreen extends StatefulWidget {
+class GameScreen extends StatelessWidget {
   /// constructor
-  GameScreen({Key key, this.title}) : super(key: key);
+  GameScreen({Key key, this.title, this.bloc}) : super(key: key);
+
+  /// bloc
+  final GameBloc bloc;
 
   /// title
   final String title;
 
-  @override
-  _GameScreenState createState() => _GameScreenState();
-}
-
-class _GameScreenState extends State<GameScreen> {
   static const minCellSize = 30;
   static const minDifficulty = 1 / 25;
   static const maxDifficulty = 1 / 5;
@@ -30,73 +30,49 @@ class _GameScreenState extends State<GameScreen> {
     'seniour',
     'lead',
   ];
-  int _dimension = 15;
-  Game board;
-  double difficulty = 1 / 5;
-
-  @override
-  void initState() {
-    board = _newGameBoard();
-    _loadStateFromSettings();
-    super.initState();
-  }
-
-  void _loadStateFromSettings() async {
-    try {
-      var p = await SharedPreferences.getInstance();
-      var board = p.getString('board');
-      if (board != null) {
-        this.board = Game.loadFromString(board);
-        _dimension = this.board.dimension;
-        difficulty = this.board.bombs.length / (_dimension * _dimension);
-        setState(() {});
-      }
-    } finally {
-      ; // do nothing
-    }
-  }
-
-  void _saveStateToSettings() async {
-    var p = await SharedPreferences.getInstance();
-    p.setString('board', board.saveToString());
-  }
 
   @override
   Widget build(BuildContext context) {
     var actions = [
       _buildRestartButton(context),
-      Center(child: Score(board: board)),
+      Center(child: _score()),
       Center(child: _status()),
-      PopupMenuButton(
-        itemBuilder: (context) {
-          return [
-            PopupMenuItem(child: Text('board size'), enabled: false),
-            PopupMenuItem(
-              child: _animatedInput(
-                builder: _buildSliderDimension,
-                animation: ValueNotifier(_dimension.toDouble()),
-                onChange: _changeDimension,
+      _streamBuilder2(
+        stream1: bloc.dimension.stream,
+        stream2: bloc.difficulty.stream,
+        builder: (context, dimension, difficulty) => PopupMenuButton(
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(child: Text('board size'), enabled: false),
+              PopupMenuItem(
+                child: _animatedInput(
+                  builder: _buildSliderDimension,
+                  animation: ValueNotifier(dimension.toDouble()),
+                  onChange: _changeDimension,
+                ),
               ),
-            ),
-            PopupMenuItem(child: Text('difficulty'), enabled: false),
-            PopupMenuItem(
-              child: _animatedInput(
-                builder: _buildSliderDifficulty,
-                animation: ValueNotifier(difficulty),
-                onChange: _changeDifficulty,
+              PopupMenuItem(child: Text('difficulty'), enabled: false),
+              PopupMenuItem(
+                child: _animatedInput(
+                  builder: _buildSliderDifficulty,
+                  animation: ValueNotifier(difficulty),
+                  onChange: _changeDifficulty,
+                ),
               ),
-            ),
-          ];
-        },
+            ];
+          },
+        ),
       ),
     ];
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
         actions: _isSquare(context) ? actions : null,
       ),
       body: Center(
-        child: OrientationBuilder(builder: _orientationBuilder),
+        child: Builder(
+            builder: (context) => _orientationBuilder(
+                context, MediaQuery.of(context).orientation)),
       ),
     );
   }
@@ -116,21 +92,61 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  Widget _streamBuilder<T>({
+    T initialData,
+    Stream<T> stream,
+    Widget Function(BuildContext, T) builder,
+  }) {
+    return StreamBuilder<T>(
+        stream: stream,
+        initialData: initialData,
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? builder(context, snapshot.data)
+              : Placeholder(fallbackWidth: 50, fallbackHeight: 50);
+        });
+  }
+
+  Widget _streamBuilder2<A, B>({
+    Stream<A> stream1,
+    Stream<B> stream2,
+    Widget Function(BuildContext, A, B) builder,
+  }) {
+    return StreamBuilder(
+        stream: latest2(stream1, stream2),
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? builder(context, snapshot.data.a, snapshot.data.b)
+              : Placeholder(fallbackWidth: 50, fallbackHeight: 50);
+        });
+  }
+
   Widget _orientationBuilder(BuildContext context, Orientation orientation) {
     var side = MediaQuery.of(context).size.shortestSide * 0.95;
     var children = [
       if (!_isSquare(context))
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text('board size'),
-          _buildSliderDimension(
-              context, _dimension.toDouble(), _changeDimension),
+          _streamBuilder<int>(
+              initialData: bloc.initialData.dimension,
+              stream: bloc.dimension.stream,
+              builder: (context, dimension) {
+                return _buildSliderDimension(
+                    context, dimension.toDouble(), _changeDimension);
+              }),
           Text('difficulty'),
-          _buildSliderDifficulty(context, difficulty, _changeDifficulty),
+          _streamBuilder<double>(
+              initialData: bloc.initialData.difficulty,
+              stream: bloc.difficulty.stream,
+              builder: (context, difficulty) {
+                return _buildSliderDifficulty(
+                    context, difficulty, _changeDifficulty);
+              }),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildRestartButton(context),
-              Score(board: board),
+              _score(),
               _status(),
             ],
           ),
@@ -138,17 +154,22 @@ class _GameScreenState extends State<GameScreen> {
       Container(
         height: side,
         width: side,
-        child: BoardAnimations(
-          state: board.state,
-          onDismiss: _newGame,
-          child: Board(
-            key: Key('board'),
-            board: board,
-            onTap: _onTap,
-            onDoubleTap: _onDoubleTap,
-            onLongPress: _onLongPress,
-          ),
-        ),
+        child: _streamBuilder<Game>(
+            initialData: bloc.initialData,
+            stream: bloc.board.stream,
+            builder: (context, board) {
+              return BoardAnimations(
+                state: board.state,
+                onDismiss: _newGame,
+                child: Board(
+                  key: Key('board'),
+                  board: board,
+                  onTap: _onTap(board),
+                  onDoubleTap: _onDoubleTap(board),
+                  onLongPress: _onLongPress(board),
+                ),
+              );
+            }),
       ),
     ];
     return orientation == Orientation.portrait
@@ -162,67 +183,50 @@ class _GameScreenState extends State<GameScreen> {
           );
   }
 
-  get _onTap => board.state == GameState.lost
+  _onTap(Game board) => board.state == GameState.lost
       ? null
       : (i, j) {
-          setState(() {
-            board = board.move(i, j);
-            _saveStateToSettings();
-          });
+          bloc.board.sink.add(board.move(i, j));
         };
 
-  get _onDoubleTap => board.state == GameState.lost
+  _onDoubleTap(Game board) => board.state == GameState.lost
       ? null
       : (i, j) {
-          setState(() {
-            board = board.reveal(i, j);
-            _saveStateToSettings();
-          });
+          bloc.board.sink.add(board.reveal(i, j));
         };
 
-  Widget _status() => Text(board.state == GameState.win
-      ? '❤️'
-      : (board.state == GameState.lost ? '💥' : '🤷🏼‍♀️'));
+  Widget _status() => _streamBuilder<GameState>(
+      initialData: bloc.initialData.state,
+      stream: bloc.stateStream,
+      builder: (context, state) {
+        return Text(state == GameState.win
+            ? '❤️'
+            : (state == GameState.lost ? '💥' : '🤷🏼‍♀️'));
+      });
+
+  Widget _score() => _streamBuilder<int>(
+      initialData: bloc.initialData.score,
+      stream: bloc.scoreStream,
+      builder: (context, score) {
+        return Score(score: score);
+      });
 
   void _newGame() {
-    setState(() {
-      board = _newGameBoard();
-      _saveStateToSettings();
-    });
+    bloc.newGameStream.sink.add(null);
   }
 
-  Game _newGameBoard() {
-    return Game(
-        dimension: _dimension,
-        bombs: Game.random(
-          dimension: _dimension,
-          numOfBombs: (_dimension * _dimension * difficulty).round(),
-        ));
-  }
-
-  get _onLongPress => board.state == GameState.lost
+  _onLongPress(Game board) => board.state == GameState.lost
       ? null
       : (i, j) {
-          setState(() {
-            board = board.mark(i, j);
-            _saveStateToSettings();
-          });
+          bloc.board.sink.add(board.mark(i, j));
         };
 
   void _changeDifficulty(double value) {
-    setState(() {
-      difficulty = value;
-      board = _newGameBoard();
-      _saveStateToSettings();
-    });
+    bloc.difficulty.sink.add(value);
   }
 
   void _changeDimension(double value) {
-    setState(() {
-      _dimension = value.floor();
-      board = _newGameBoard();
-      _saveStateToSettings();
-    });
+    bloc.dimension.sink.add(value.floor());
   }
 
   Slider _buildSliderDifficulty(
@@ -234,8 +238,8 @@ class _GameScreenState extends State<GameScreen> {
         .round();
     return Slider(
       value: difficulty,
-      min: minDifficulty,
-      max: maxDifficulty,
+      min: min(difficulty, minDifficulty),
+      max: max(difficulty, maxDifficulty),
       divisions: difficultyLevels,
       label: difficultyNames[difficultyLevel],
       onChanged: onChange,
