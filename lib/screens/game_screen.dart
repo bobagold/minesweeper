@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/game.dart';
 import '../models/game_bloc.dart';
-import '../models/tuple.dart';
+import '../utils/utils.dart';
 import '../widgets/board.dart';
 import '../widgets/board_animations.dart';
 import '../widgets/score.dart';
@@ -38,6 +38,8 @@ class GameScreen extends StatelessWidget {
       Center(child: _score()),
       Center(child: _status()),
       _streamBuilder2(
+        initialData1: bloc.initialData.dimension,
+        initialData2: bloc.initialData.difficulty,
         stream1: bloc.dimension.stream,
         stream2: bloc.difficulty.stream,
         builder: (context, dimension, difficulty) => PopupMenuButton(
@@ -98,6 +100,7 @@ class GameScreen extends StatelessWidget {
     Widget Function(BuildContext, T) builder,
   }) {
     return StreamBuilder<T>(
+        key: keyForObject(stream),
         stream: stream,
         initialData: initialData,
         builder: (context, snapshot) {
@@ -108,17 +111,21 @@ class GameScreen extends StatelessWidget {
   }
 
   Widget _streamBuilder2<A, B>({
+    A initialData1,
+    B initialData2,
     Stream<A> stream1,
     Stream<B> stream2,
     Widget Function(BuildContext, A, B) builder,
   }) {
-    return StreamBuilder(
-        stream: latest2(stream1, stream2),
-        builder: (context, snapshot) {
-          return snapshot.hasData
-              ? builder(context, snapshot.data.a, snapshot.data.b)
-              : Placeholder(fallbackWidth: 50, fallbackHeight: 50);
-        });
+    return _streamBuilder(
+      initialData: initialData1,
+      stream: stream1,
+      builder: (context, snapshot1) => _streamBuilder(
+        initialData: initialData2,
+        stream: stream2,
+        builder: (context, snapshot2) => builder(context, snapshot1, snapshot2),
+      ),
+    );
   }
 
   Widget _orientationBuilder(BuildContext context, Orientation orientation) {
