@@ -1,7 +1,9 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 ![Dart CI](https://github.com/bobagold/minesweeper/workflows/Dart%20CI/badge.svg)
 [![play-store](https://img.shields.io/badge/playstore-published-brightgreen)](https://play.google.com/store/apps/details?id=com.actvst.bobagold.minesweeper)
-
+[![app-store](https://img.shields.io/badge/appstore-published-brightgreen)](https://apps.apple.com/de/app/meinsweeper/id1521149028)
+[![itsallwidgets](https://img.shields.io/badge/itsallwidgets-published-brightgreen)](https://itsallwidgets.com/minesweeper-game)
+ 
 # minesweeper
 
 Minesweeper game.
@@ -23,8 +25,6 @@ Minesweeper game.
 
 ## Todo
 
-* Art
-* Save settings
 * Performance #2
 * Cell widget
-* State management
+* Improve code style
