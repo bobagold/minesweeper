@@ -7,5 +7,5 @@ GlobalKey keyForObject(Object object) {
   if (!_globalKeys.containsKey(object)) {
     _globalKeys[object] = GlobalKey();
   }
-  return _globalKeys[object];
+  return _globalKeys[object]!;
 }

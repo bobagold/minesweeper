@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/game.dart';
 
 /// load from SharedPreferences
-Future<Game> loadStateFromSettings() async {
+Future<Game?> loadStateFromSettings() async {
   try {
     var p = await SharedPreferences.getInstance();
     var board = p.getString('board');

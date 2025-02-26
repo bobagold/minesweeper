@@ -12,7 +12,7 @@ import '../widgets/score.dart';
 /// game screen
 class GameScreen extends StatelessWidget {
   /// constructor
-  GameScreen({Key key, this.title, this.bloc}) : super(key: key);
+  GameScreen({super.key, required this.title, required this.bloc});
 
   /// bloc
   final GameBloc bloc;
@@ -95,9 +95,9 @@ class GameScreen extends StatelessWidget {
   }
 
   Widget _streamBuilder<T>({
-    T initialData,
-    Stream<T> stream,
-    Widget Function(BuildContext, T) builder,
+    required T initialData,
+    required Stream<T> stream,
+    required Widget Function(BuildContext, T) builder,
   }) {
     return StreamBuilder<T>(
         key: keyForObject(stream),
@@ -105,17 +105,17 @@ class GameScreen extends StatelessWidget {
         initialData: initialData,
         builder: (context, snapshot) {
           return snapshot.hasData
-              ? builder(context, snapshot.data)
+              ? builder(context, snapshot.data!)
               : Placeholder(fallbackWidth: 50, fallbackHeight: 50);
         });
   }
 
   Widget _streamBuilder2<A, B>({
-    A initialData1,
-    B initialData2,
-    Stream<A> stream1,
-    Stream<B> stream2,
-    Widget Function(BuildContext, A, B) builder,
+    required A initialData1,
+    required B initialData2,
+    required Stream<A> stream1,
+    required Stream<B> stream2,
+    required Widget Function(BuildContext, A, B) builder,
   }) {
     return _streamBuilder(
       initialData: initialData1,
@@ -269,11 +269,11 @@ class GameScreen extends StatelessWidget {
   }
 
   Widget _animatedInput({
-    Widget Function(
+    required Widget Function(
             BuildContext context, double value, ValueChanged<double> onChange)
         builder,
-    ValueNotifier<double> animation,
-    ValueChanged<double> onChange,
+    required ValueNotifier<double> animation,
+    required ValueChanged<double> onChange,
   }) =>
       AnimatedBuilder(
         animation: animation,

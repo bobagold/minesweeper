@@ -10,23 +10,22 @@ class Board extends StatelessWidget {
   final Game board;
 
   /// onTap
-  final Function(int, int) onTap;
+  final Function(int, int)? onTap;
 
   /// onTap
-  final Function(int, int) onDoubleTap;
+  final Function(int, int)? onDoubleTap;
 
   /// onTap
-  final Function(int, int) onLongPress;
+  final Function(int, int)? onLongPress;
 
   /// constructor
   Board({
-    Key key,
-    @required this.board,
-    @required this.onTap,
-    @required this.onDoubleTap,
-    @required this.onLongPress,
-  })  : dimension = board.dimension,
-        super(key: key);
+    super.key,
+    required this.board,
+    required this.onTap,
+    required this.onDoubleTap,
+    required this.onLongPress,
+  }) : dimension = board.dimension;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class Board extends StatelessWidget {
         dimension;
     return Table(
         key: Key('boardTable'),
-        border: TableBorder.all(width: 0, color: Colors.grey[600]),
+        border: TableBorder.all(width: 0, color: Colors.grey[600]!),
         defaultColumnWidth: FixedColumnWidth(width),
         children: List.generate(
             dimension,
@@ -58,19 +57,19 @@ class Board extends StatelessWidget {
       child: _buildCellContents(
         i: i,
         j: j,
-        onTap: onTap != null ? () => onTap(i, j) : null,
-        onDoubleTap: onDoubleTap != null ? () => onDoubleTap(i, j) : null,
-        onLongPress: onLongPress != null ? () => onLongPress(i, j) : null,
+        onTap: onTap != null ? () => onTap!(i, j) : null,
+        onDoubleTap: onDoubleTap != null ? () => onDoubleTap!(i, j) : null,
+        onLongPress: onLongPress != null ? () => onLongPress!(i, j) : null,
       ),
     );
   }
 
   Widget _buildCellContents({
-    int i,
-    int j,
-    VoidCallback onTap,
-    VoidCallback onDoubleTap,
-    VoidCallback onLongPress,
+    required int i,
+    required int j,
+    VoidCallback? onTap,
+    VoidCallback? onDoubleTap,
+    VoidCallback? onLongPress,
   }) {
     var value = board.cells[i][j];
     var isMarked = board.isMarked(i, j);
@@ -104,7 +103,12 @@ class Board extends StatelessWidget {
           );
   }
 
-  String _text({int value, bool isOpen, bool isMarked, bool isVisible}) =>
+  String _text({
+    required int value,
+    required bool isOpen,
+    required bool isMarked,
+    required bool isVisible,
+  }) =>
       isMarked ? '🚩' : (isVisible ? '💣' : (isOpen ? _openText(value) : ' '));
 
   String _openText(int v) => v == 10 ? '💥' : (v == 0 ? '' : '$v');

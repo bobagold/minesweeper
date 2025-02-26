@@ -29,13 +29,13 @@ class GameBloc extends Bloc {
   final Game initialData = _defaultGame();
 
   /// load (second) initial state from external store
-  final Future<Game> Function() load;
+  final Future<Game?> Function() load;
 
   /// save state to external store
   final Function(Game) save;
 
   /// constructor
-  GameBloc({this.load, this.save}) {
+  GameBloc({required this.load, required this.save}) {
     _load();
   }
 
@@ -47,7 +47,7 @@ class GameBloc extends Bloc {
   }
 
   void _load() async {
-    var game = initialData;
+    Game? game = initialData;
     var lastDimension = game.dimension;
     var lastDifficulty = game.difficulty;
     var isLoading = true;
@@ -56,9 +56,7 @@ class GameBloc extends Bloc {
     board.sink.add(game);
     board.stream.listen((event) {
       if (!isLoading) {
-        if (save != null) {
-          save(event);
-        }
+        save(event);
       } else {
         isLoading = false;
       }
@@ -75,18 +73,16 @@ class GameBloc extends Bloc {
       board.sink.add(
           _newGameBoard(dimension: lastDimension, difficulty: lastDifficulty));
     });
-    if (load != null) {
-      game = await load();
-      if (game != null) {
-        isLoading = true;
-        dimension.sink.add(game.dimension);
-        difficulty.sink.add(game.difficulty);
-        board.sink.add(game);
-      }
+    game = await load();
+    isLoading = true;
+    if (game != null) {
+      dimension.sink.add(game.dimension);
+      difficulty.sink.add(game.difficulty);
+      board.sink.add(game);
     }
   }
 
-  Game _newGameBoard({int dimension, double difficulty}) {
+  Game _newGameBoard({required int dimension, required double difficulty}) {
     var numOfBombs = (dimension * dimension * difficulty).round();
     return Game(
       dimension: dimension,

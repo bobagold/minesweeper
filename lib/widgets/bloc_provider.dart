@@ -12,10 +12,10 @@ class BlocProvider<T extends Bloc> extends StatefulWidget {
 
   /// constructor
   const BlocProvider({
-    Key key,
-    @required this.builder,
-    @required this.create,
-  }) : super(key: key);
+    super.key,
+    required this.builder,
+    required this.create,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -24,11 +24,11 @@ class BlocProvider<T extends Bloc> extends StatefulWidget {
 
   /// provider state instance
   static T of<T extends Bloc>(BuildContext context) =>
-      context.findAncestorStateOfType<_BlocProviderState<T>>().bloc;
+      context.findAncestorStateOfType<_BlocProviderState<T>>()!.bloc;
 }
 
 class _BlocProviderState<T extends Bloc> extends State<BlocProvider<T>> {
-  T bloc;
+  late T bloc;
 
   @override
   void initState() {

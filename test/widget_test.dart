@@ -114,11 +114,11 @@ void main() {
   });
 }
 
-int score() {
+int? score() {
   var score = find
       .descendant(of: find.byKey(Key('score')), matching: find.byType(Text))
       .evaluate()
       .first
       .widget;
-  return int.tryParse(score is Text ? score.data : '-1');
+  return int.tryParse(score is Text && score.data != null ? score.data! : '-1');
 }

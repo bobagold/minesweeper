@@ -5,15 +5,13 @@ import 'package:test/test.dart';
 
 void main() {
   group('Minesweeper app', () {
-    FlutterDriver driver;
+    late FlutterDriver driver;
     setUpAll(() async {
       Directory('screenshots').create();
       driver = await FlutterDriver.connect();
     });
     tearDownAll(() async {
-      if (driver != null) {
-        driver.close();
-      }
+      driver.close();
     });
     takeScreenshot(String path) async {
 //      var pixels = await driver.screenshot();

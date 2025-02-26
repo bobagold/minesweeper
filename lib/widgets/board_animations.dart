@@ -1,5 +1,5 @@
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 import '../models/game.dart';
 
 /// board animations
@@ -15,22 +15,22 @@ class BoardAnimations extends StatelessWidget {
 
   /// constructor
   const BoardAnimations({
-    Key key,
-    this.state,
-    this.onDismiss,
-    this.child,
-  }) : super(key: key);
+    super.key,
+    required this.state,
+    required this.onDismiss,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) => _boardAnimations(context);
 
   List<Widget> _fullscreenAnimation({
-    Duration duration,
-    String filename,
-    String animation,
-    Color beginColor,
-    Color endColor,
-    VoidCallback onDismiss,
+    required Duration duration,
+    required String filename,
+    required String animation,
+    required Color beginColor,
+    required Color endColor,
+    required VoidCallback onDismiss,
   }) =>
       [
         TweenAnimationBuilder(
@@ -43,9 +43,9 @@ class BoardAnimations extends StatelessWidget {
             color: color,
           ),
         ),
-        FlareActor(
+        RiveAnimation.asset(
           filename,
-          animation: animation,
+          animations: [animation],
         ),
         GestureDetector(
           onTap: onDismiss,
@@ -68,8 +68,8 @@ class BoardAnimations extends StatelessWidget {
         ..._fullscreenAnimation(
           filename: 'assets/lost-fullscreen.flr',
           animation: 'estrellas',
-          beginColor: Colors.red.withOpacity(0.4),
-          endColor: Colors.red.withOpacity(0.1),
+          beginColor: Colors.red.withAlpha(102),
+          endColor: Colors.red.withAlpha(25),
           duration: Duration(milliseconds: 1500),
           onDismiss: onDismiss,
         ),

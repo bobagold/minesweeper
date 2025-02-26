@@ -7,7 +7,7 @@ class Score extends StatelessWidget {
   final int score;
 
   /// constructor
-  const Score({Key key, this.score}) : super(key: key);
+  const Score({super.key, required this.score});
 
   @override
   Widget build(BuildContext context) {

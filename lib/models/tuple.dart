@@ -21,18 +21,18 @@ class Tuple2<A, B> {
 /// last 2 items of 2 streams, same as in rxdart
 Stream<Tuple2<A, B>> latest2<A, B>(Stream<A> a, Stream<B> b) {
   var output = StreamController<Tuple2<A, B>>();
-  A lastA;
-  B lastB;
+  A? lastA;
+  B? lastB;
   a.listen((value) {
     lastA = value;
     if (lastB != null) {
-      output.add(Tuple2(lastA, lastB));
+      output.add(Tuple2(lastA!, lastB!));
     }
   });
   b.listen((value) {
     lastB = value;
     if (lastA != null) {
-      output.add(Tuple2(lastA, lastB));
+      output.add(Tuple2(lastA!, lastB!));
     }
   });
   return output.stream;

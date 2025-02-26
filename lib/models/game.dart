@@ -31,21 +31,21 @@ class Game {
   /// marked cells - plain array
   final Set<int> markedCells;
 
-  List<List<int>> _cells;
+  late List<List<int>> _cells;
 
   Game._({
-    this.dimension,
-    this.bombs,
-    List<List<int>> cells,
-    this.state,
-    this.openCells,
-    this.markedCells,
+    required this.dimension,
+    required this.bombs,
+    required List<List<int>> cells,
+    required this.state,
+    required this.openCells,
+    required this.markedCells,
   }) : _cells = cells;
 
   /// constructor
   Game({
-    this.dimension,
-    this.bombs,
+    required this.dimension,
+    required this.bombs,
     this.openCells = const {},
     this.markedCells = const {},
   }) : state = GameState.playing {
@@ -118,7 +118,7 @@ class Game {
 
   void _openAdjustmentCells(
       Queue stackOfZeroAdjustmentCells, Set<int> newOpen) {
-    while (stackOfZeroAdjustmentCells.length > 0) {
+    while (stackOfZeroAdjustmentCells.isNotEmpty) {
       var currentCell = stackOfZeroAdjustmentCells.removeFirst();
       var i = currentCell[0];
       var j = currentCell[1];
@@ -172,7 +172,7 @@ class Game {
   }
 
   /// randomise bombs
-  static Set<int> random({int dimension, int numOfBombs}) {
+  static Set<int> random({required int dimension, required int numOfBombs}) {
     var list = List.generate(dimension * dimension, (i) => i);
     var random = Random();
     var ret = <int>{};

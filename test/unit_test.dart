@@ -5,8 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:test/test.dart';
 import 'package:minesweeper/models/game.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('Game model can calculate cells', () {
@@ -117,7 +117,7 @@ void main() {
     expect(Game.random(dimension: 15, numOfBombs: 3).length, 3);
     expect(
         Game.random(dimension: 15, numOfBombs: 3)
-            .every((element) => element != null),
+            .every((element) => element >= 0),
         true);
   });
   test('saveToString works', () {
