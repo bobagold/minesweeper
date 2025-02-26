@@ -20,8 +20,8 @@ Minesweeper game.
 * Responsive design - fits portrait, landscape, split-screen, tablet
 * Tests
 * Rive animations:
-    * https://rive.app/a/bobagold/files/flare/winner-minesweeper/preview
-    * https://rive.app/a/bobagold/files/flare/entrellas-minesweeper/preview
+    * https://rive.app/community/files/11975-22809-kawaii-animals-crying/
+    * https://rive.app/community/files/11976-22810-kawaii-animals-giving-love/
 
 ## Todo
 
