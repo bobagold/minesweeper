@@ -16,24 +16,24 @@ repos:
     hooks:
     -   id: check-format
         name: Check format
-        entry: flutter.sh format --set-exit-if-changed
-        language: script
+        entry: dart format --set-exit-if-changed
+        language: system
         files: \.dart$
     -   id: check-analyze
         name: Run flutter analyze
-        entry: flutter.sh analyze
+        entry: flutter analyze
         pass_filenames: false
-        language: script
+        language: system
         files: \.dart$
     -   id: check-test
         name: Run flutter test
-        entry: flutter.sh test
+        entry: flutter test
         pass_filenames: false
-        language: script
+        language: system
         files: \.dart$
     -   id: check-integration-test
         name: Run flutter integration test
-        entry: flutter.sh driver -t test_driver/app.dart --driver test_driver/app_test.dart
+        entry: flutter driver -t test_driver/app.dart --driver test_driver/app_test.dart
         pass_filenames: false
-        language: script
+        language: system
         files: \.dart$

@@ -3,7 +3,7 @@
 [![play-store](https://img.shields.io/badge/playstore-published-brightgreen)](https://play.google.com/store/apps/details?id=com.actvst.bobagold.minesweeper)
 [![app-store](https://img.shields.io/badge/appstore-published-brightgreen)](https://apps.apple.com/de/app/meinsweeper/id1521149028)
 [![itsallwidgets](https://img.shields.io/badge/itsallwidgets-published-brightgreen)](https://itsallwidgets.com/minesweeper-game)
- 
+
 # minesweeper
 
 Minesweeper game.

@@ -20,9 +20,16 @@ class GameScreen extends StatelessWidget {
   /// title
   final String title;
 
+  /// minCellSize
   static const minCellSize = 30;
+
+  /// minDifficulty
   static const minDifficulty = 1 / 25;
+
+  /// maxDifficulty
   static const maxDifficulty = 1 / 5;
+
+  /// difficultyNames
   static const difficultyNames = [
     'intern',
     'juniour',
