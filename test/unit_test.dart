@@ -16,14 +16,19 @@ void main() {
     expect(game.cells[1][0], 10);
     expect(game.cells[0][0], 2);
     expect(game.cells[1][1], 2);
-    expect(game.state, GameState.playing);
+    expect(game.state, GameState.created);
+  });
+  test('Game model first move() on bomb moves bombs', () {
+    var game = Game(dimension: 3, bombs: {1, 3});
+    var move = game.move(0, 1);
+    expect(move.state, GameState.playing);
+    expect(move.openCells, [1]);
   });
   test('Game model move() can expole bombs', () {
     var game = Game(dimension: 3, bombs: {1, 3});
-//    for (var i in game.cells) print(i);
-    var move = game.move(0, 1);
+    var move = game.move(0, 1).move(1, 0);
     expect(move.state, GameState.lost);
-    expect(move.openCells, [1]);
+    expect(move.openCells, [1, 3]);
   });
   test('Game model move() can open number', () {
     var game = Game(dimension: 3, bombs: {1, 3});
@@ -73,7 +78,7 @@ void main() {
   });
   test('Game detects win by marked bombs', () {
     var game = Game(dimension: 3, bombs: {1, 3});
-    expect(game.state, GameState.playing);
+    expect(game.state, GameState.created);
     game = game.mark(0, 1);
     expect(game.state, GameState.playing);
     game = game.mark(1, 0);
@@ -82,7 +87,7 @@ void main() {
   });
   test('Game detects win by opened non-bombs', () {
     var game = Game(dimension: 3, bombs: {0, 2, 3, 4, 5, 6, 7, 8});
-    expect(game.state, GameState.playing);
+    expect(game.state, GameState.created);
     game = game.move(0, 1);
     expect(game.state, GameState.win);
     expect(game.isOpen(0, 0), false);
@@ -91,25 +96,25 @@ void main() {
   });
   test('Game shows all the bombs on loose', () {
     var game = Game(dimension: 3, bombs: {0, 3});
-    expect(game.state, GameState.playing);
-    game = game.move(0, 0);
+    expect(game.state, GameState.created);
+    game = game.move(0, 0).move(1, 0);
     expect(game.state, GameState.lost);
     expect(game.isOpen(0, 3), true);
   });
   test('Cannot reveal neighbours if not open', () {
     var game = Game(dimension: 3, bombs: {0, 8});
-    expect(game.state, GameState.playing);
+    expect(game.state, GameState.created);
     expect(game.reveal(0, 1), game);
   });
   test('Cannot reveal neighbours if number != marked neighbours', () {
     var game = Game(dimension: 3, bombs: {0, 8}, openCells: {1});
-    expect(game.state, GameState.playing);
+    expect(game.state, GameState.created);
     expect(game.reveal(0, 1), game);
   });
   test('Can reveal neighbours if number == marked neighbours', () {
     var game =
         Game(dimension: 3, bombs: {0, 8}, markedCells: {0}, openCells: {1});
-    expect(game.state, GameState.playing);
+    expect(game.state, GameState.created);
     game = game.reveal(0, 1);
     expect(game.openCells, {1, 2, 3, 4, 5});
   });

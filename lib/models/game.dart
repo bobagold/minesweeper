@@ -12,6 +12,9 @@ enum GameState {
 
   /// still playing
   playing,
+
+  /// new
+  created,
 }
 
 /// game state
@@ -48,7 +51,7 @@ class Game {
     required this.bombs,
     this.openCells = const {},
     this.markedCells = const {},
-  }) : state = GameState.playing {
+  }) : state = GameState.created {
     _cells = List.generate(
         dimension,
         (i) => List.generate(
@@ -90,6 +93,12 @@ class Game {
   Game move(int i, int j) {
     var newState = state;
     var newOpen = Set.of(openCells);
+    if (_isBomb(i, j) && state == GameState.created) {
+      return _moveBomb(i, j);
+    }
+    if (state == GameState.created) {
+      newState = GameState.playing;
+    }
     if (_isBomb(i, j)) {
       newState = GameState.lost;
     }
@@ -114,6 +123,24 @@ class Game {
       openCells: newOpen,
       markedCells: markedCells,
     );
+  }
+
+  Game _moveBomb(int i, int j) {
+    final random = Random();
+    var newBomb = random.nextInt(dimension * dimension);
+    var newBombs = Set.of(bombs);
+    while (newBombs.contains(newBomb)) {
+      newBomb = random.nextInt(dimension * dimension);
+    }
+    newBombs.remove(i * dimension + j);
+    newBombs.add(newBomb);
+    final newGame = Game(
+      dimension: dimension,
+      bombs: newBombs,
+      openCells: openCells,
+      markedCells: markedCells,
+    );
+    return newGame.move(i, j);
   }
 
   void _openAdjustmentCells(
@@ -154,6 +181,9 @@ class Game {
       newMarked.add(i * dimension + j);
     }
     var newState = state;
+    if (newState == GameState.created) {
+      newState = GameState.playing;
+    }
     if (newState == GameState.playing) {
       var setOfBombs = Set.of(bombs);
       if (newMarked.intersection(setOfBombs).length ==

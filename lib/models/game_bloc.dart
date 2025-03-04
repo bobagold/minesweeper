@@ -62,8 +62,8 @@ class GameBloc extends Bloc {
       }
     });
     latest2(dimension.stream, difficulty.stream).listen((tuple) {
-      lastDimension = tuple.a;
-      lastDifficulty = tuple.b;
+      lastDimension = tuple.$1;
+      lastDifficulty = tuple.$2;
       if (!isLoading) {
         newGameStream.add(null);
       }
