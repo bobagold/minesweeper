@@ -162,6 +162,8 @@ class GameScreen extends StatelessWidget {
               _buildRestartButton(context),
               _score(),
               _status(),
+              SizedBox.square(dimension: 10),
+              _time(),
             ],
           ),
         ]),
@@ -216,6 +218,24 @@ class GameScreen extends StatelessWidget {
         return Text(state == GameState.win
             ? '❤️'
             : (state == GameState.lost ? '💥' : '🤷🏼‍♀️'));
+      });
+
+  Widget _time() => _streamBuilder<void>(
+      initialData: bloc.initialData.state,
+      stream: bloc.newGameStream.stream,
+      builder: (context, state) {
+        print('repaint');
+        return StreamBuilder<int>(
+            initialData: 0,
+            stream: Stream.periodic(Duration(seconds: 1), (i) {
+              print('it $i');
+              return i;
+            }),
+            builder: (context, asyncSnapshot) {
+              return Text(Duration(seconds: asyncSnapshot.data!)
+                  .toString()
+                  .replaceAll(RegExp(r'\..*'), ''));
+            });
       });
 
   Widget _score() => _streamBuilder<int>(

@@ -21,6 +21,14 @@ class GameBloc extends Bloc {
   /// game state
   Stream<GameState> get stateStream => board.stream.map((game) => game.state);
 
+  /// time state
+  Stream<int> get timeStream => newGameStream.stream
+      .asyncExpand((_) => Stream.periodic(Duration(seconds: 1), (i) {
+            print('it $i');
+            if (i > 5) throw Error();
+            return i;
+          }));
+
   /// new game stream
   final StreamController<void> newGameStream =
       StreamController<void>.broadcast();

@@ -33,7 +33,7 @@ repos:
         files: \.dart$
     -   id: check-integration-test
         name: Run flutter integration test
-        entry: flutter driver -t test_driver/app.dart --driver test_driver/app_test.dart
+        entry: flutter driver -d macOS -t test_driver/app.dart --driver test_driver/app_test.dart
         pass_filenames: false
         language: system
         files: \.dart$
