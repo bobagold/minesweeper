@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../models/game.dart';
 import '../models/game_bloc.dart';
-import '../utils/utils.dart';
 import '../widgets/board.dart';
 import '../widgets/board_animations.dart';
 import '../widgets/score.dart';
@@ -44,9 +43,10 @@ class GameScreen extends StatelessWidget {
       _buildRestartButton(context),
       Center(child: _score()),
       Center(child: _status()),
+      Center(child: _time()),
       _streamBuilder2(
         initialData1: bloc.initialData.dimension,
-        initialData2: bloc.initialData.difficulty,
+        initialData2: bloc.currentDifficulty,
         stream1: bloc.dimension.stream,
         stream2: bloc.difficulty.stream,
         builder: (context, dimension, difficulty) => PopupMenuButton(
@@ -107,7 +107,6 @@ class GameScreen extends StatelessWidget {
     required Widget Function(BuildContext, T) builder,
   }) {
     return StreamBuilder<T>(
-        key: keyForObject(stream),
         stream: stream,
         initialData: initialData,
         builder: (context, snapshot) {
@@ -150,7 +149,7 @@ class GameScreen extends StatelessWidget {
               }),
           Text('difficulty'),
           _streamBuilder<double>(
-              initialData: bloc.initialData.difficulty,
+              initialData: bloc.currentDifficulty,
               stream: bloc.difficulty.stream,
               builder: (context, difficulty) {
                 return _buildSliderDifficulty(
@@ -199,17 +198,22 @@ class GameScreen extends StatelessWidget {
           );
   }
 
-  _onTap(Game board) => board.state == GameState.lost
-      ? null
-      : (i, j) {
-          bloc.board.sink.add(board.move(i, j));
-        };
+  _onTap(Game board) =>
+      board.state == GameState.lost || board.state == GameState.win
+          ? null
+          : (row, column) {
+              _move((game) => game.move(row, column));
+            };
 
-  _onDoubleTap(Game board) => board.state == GameState.lost
-      ? null
-      : (i, j) {
-          bloc.board.sink.add(board.reveal(i, j));
-        };
+  _onDoubleTap(Game board) =>
+      board.state == GameState.lost || board.state == GameState.win
+          ? null
+          : (row, column) {
+              _move((game) => game.reveal(row, column));
+            };
+  void _move(Game Function(Game) move) {
+    bloc.update(move);
+  }
 
   Widget _status() => _streamBuilder<GameState>(
       initialData: bloc.initialData.state,
@@ -220,23 +224,12 @@ class GameScreen extends StatelessWidget {
             : (state == GameState.lost ? '💥' : '🤷🏼‍♀️'));
       });
 
-  Widget _time() => _streamBuilder<void>(
-      initialData: bloc.initialData.state,
-      stream: bloc.newGameStream.stream,
-      builder: (context, state) {
-        print('repaint');
-        return StreamBuilder<int>(
-            initialData: 0,
-            stream: Stream.periodic(Duration(seconds: 1), (i) {
-              print('it $i');
-              return i;
-            }),
-            builder: (context, asyncSnapshot) {
-              return Text(Duration(seconds: asyncSnapshot.data!)
-                  .toString()
-                  .replaceAll(RegExp(r'\..*'), ''));
-            });
-      });
+  Widget _time() => _streamBuilder<int>(
+      initialData: bloc.elapsedSeconds,
+      stream: bloc.timeStream,
+      builder: (context, seconds) => Text(
+          Duration(seconds: seconds).toString().split('.').first,
+          key: Key('timer')));
 
   Widget _score() => _streamBuilder<int>(
       initialData: bloc.initialData.score,
@@ -249,11 +242,12 @@ class GameScreen extends StatelessWidget {
     bloc.newGameStream.sink.add(null);
   }
 
-  _onLongPress(Game board) => board.state == GameState.lost
-      ? null
-      : (i, j) {
-          bloc.board.sink.add(board.mark(i, j));
-        };
+  _onLongPress(Game board) =>
+      board.state == GameState.lost || board.state == GameState.win
+          ? null
+          : (row, column) {
+              _move((game) => game.mark(row, column));
+            };
 
   void _changeDifficulty(double value) {
     bloc.difficulty.sink.add(value);

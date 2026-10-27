@@ -1,6 +1,6 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 fail_fast: true
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
@@ -12,6 +12,12 @@ repos:
     -   id: check-added-large-files
     -   id: check-json
     -   id: check-merge-conflict
+-   repo: https://github.com/zizmorcore/zizmor-pre-commit
+    # Zizmor version.
+    rev: v1.23.1
+    hooks:
+        # Run the linter.
+    -   id: zizmor
 -   repo: local
     hooks:
     -   id: check-format
