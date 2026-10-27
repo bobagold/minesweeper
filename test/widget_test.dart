@@ -15,8 +15,32 @@ import 'package:minesweeper/models/game_bloc.dart';
 import 'package:minesweeper/screens/game_screen.dart';
 import 'package:minesweeper/widgets/board.dart';
 import 'package:minesweeper/widgets/score.dart';
+import 'package:rive/rive.dart' as rive;
 
 void main() {
+  group('Rive assets', () {
+    for (var entry in {
+      'assets/win-fullscreen.flr': 'Timeline 1',
+      'assets/lost-fullscreen.flr': 'Timeline 1',
+    }.entries) {
+      testWidgets('${entry.key} retains its end-game animation',
+          (tester) async {
+        await tester.runAsync(() async {
+          expect(await rive.RiveNative.init(), isTrue);
+          var file = await rive.File.asset(entry.key,
+              riveFactory: rive.Factory.flutter);
+          expect(file, isNotNull);
+          var artboard = file!.defaultArtboard();
+          expect(artboard, isNotNull);
+          var animation = artboard!.animationNamed(entry.value);
+          expect(animation, isNotNull);
+          animation?.dispose();
+          artboard.dispose();
+          file.dispose();
+        });
+      });
+    }
+  });
   group('GameBloc', () {
     testWidgets(
         'consecutive moves use current state and completed games freeze',

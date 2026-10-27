@@ -13,6 +13,7 @@ void main() {
       var updated = bloc.board.stream.first;
       bloc.board.add(_testGame());
       await updated;
+      await WidgetsBinding.instance.endOfFrame;
     } else if (command != 'state') {
       throw ArgumentError.value(command, 'command');
     }

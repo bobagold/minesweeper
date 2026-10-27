@@ -23,6 +23,25 @@ Minesweeper game.
     * https://rive.app/community/files/11975-22809-kawaii-animals-crying/
     * https://rive.app/community/files/11976-22810-kawaii-animals-giving-love/
 
+## Development
+
+iOS and macOS native dependencies use Swift Package Manager. CocoaPods is not
+required. Open the platform's `Runner.xcworkspace` when working in Xcode.
+
+After fetching dependencies, prepare Rive's native library for widget tests:
+
+```sh
+flutter pub get
+dart run rive_native:setup --clean --platform macos
+flutter test
+```
+
+Use `--platform linux` or `--platform windows` on those hosts. Repeat the setup
+after `flutter clean`, which removes the native test library from the build folder.
+The setup command's `--clean` flag restores that library even when the download
+was previously cached.
+App builds download their required Rive libraries automatically.
+
 ## Todo
 
 * Performance #2
