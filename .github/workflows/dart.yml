@@ -52,8 +52,6 @@ jobs:
           test -x "$JAVA_HOME/bin/java"
           "$JAVA_HOME/bin/java" -version
           flutter config --jdk-dir="$JAVA_HOME"
-          cd android
-          ./gradlew --version
       - name: Restore keystore
         # -d on linux, -D on macos
         run: printf '%s' "$SIGNING_KEY" | base64 -D > android/app/key.jks
